@@ -53,11 +53,10 @@ export default function ContactPage() {
     }
 
     try {
-      const response = await fetch("/api/book-demo", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          inquiryType: "CONTACT_REQUEST",
           fullName: formData.fullName.trim(),
           companyName: formData.companyName.trim() || "General Contact",
           phoneNumber: formData.phoneNumber.trim(),

@@ -125,9 +125,9 @@ assert.equal(violationsFound, 0, `Negative oracle violations found in source cod
 console.log(`  ✓ All ${sourceFiles.length} source files checked: 0 prohibited claims or stale artifacts found.`);
 
 // ----------------------------------------------------
-// 4. Verification that Contaminated Screenshots are not in UI
+// 4. Verification that Contaminated Screenshots are Physically Removed
 // ----------------------------------------------------
-console.log("\n[4] Screenshot Authenticity Verification");
+console.log("\n[4] Screenshot Authenticity & Physical Asset Removal Verification");
 const contaminatedScreenshots = [
   "01-lead-overview.png",
   "02-lead-list.png",
@@ -137,6 +137,14 @@ const contaminatedScreenshots = [
   "06-team-management.png",
 ];
 
+// A. Assert physical files do NOT exist in public directory
+for (const shot of contaminatedScreenshots) {
+  const diskPath = path.join(rootDir, "public/screenshots", shot);
+  assert.ok(!fs.existsSync(diskPath), `Contaminated asset must not exist on disk: ${diskPath}`);
+}
+console.log("  ✓ Physical disk files confirmed deleted from public/screenshots/.");
+
+// B. Assert source code references are 0
 let screenshotRefsFound = 0;
 for (const filePath of sourceFiles) {
   const content = fs.readFileSync(filePath, "utf8");

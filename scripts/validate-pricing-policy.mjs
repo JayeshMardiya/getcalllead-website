@@ -1,9 +1,43 @@
 import assert from "node:assert/strict";
-import { PRICING_POLICY, calculatePricingQuote, formatInr } from "../src/lib/pricing-policy.ts";
+import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { PRICING_POLICY, calculatePricingQuote, formatInr, CANONICAL_CHECKSUM_SHA256 } from "../src/lib/pricing-policy.ts";
 
 console.log("Validating pricing policy against owner-approved canonical calculations...");
 
-// Check policy basics
+// 1. Verify canonical artifact presence and SHA-256 integrity
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const artifactPath = path.join(__dirname, "../src/lib/generated/pricing-policy.canonical.json");
+assert.ok(fs.existsSync(artifactPath), "Canonical pricing artifact must exist at src/lib/generated/pricing-policy.canonical.json");
+
+const rawArtifact = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
+assert.equal(rawArtifact.policyVersion, 3, "Policy version must be 3");
+assert.equal(rawArtifact.currency, "INR", "Currency must be INR");
+assert.equal(rawArtifact.monthly.firstSeatRupees, 299, "First monthly seat must be ₹299");
+assert.equal(rawArtifact.monthly.additionalSeatRupees, 149, "Additional monthly seat must be ₹149");
+assert.equal(rawArtifact.annual.firstSeatRupees, 3499, "First annual seat must be ₹3,499");
+assert.equal(rawArtifact.annual.additionalSeatRupees, 1188, "Additional annual seat must be ₹1,188");
+
+function canonicalize(obj) {
+  if (obj === null || typeof obj !== "object") return obj;
+  if (Array.isArray(obj)) return obj.map(canonicalize);
+  const sorted = {};
+  for (const key of Object.keys(obj).sort()) {
+    sorted[key] = canonicalize(obj[key]);
+  }
+  return sorted;
+}
+
+const { checksumSha256, ...payload } = rawArtifact;
+const canonicalString = JSON.stringify(canonicalize(payload), null, 2);
+const calculatedChecksum = crypto.createHash("sha256").update(canonicalString, "utf8").digest("hex");
+assert.equal(calculatedChecksum, checksumSha256, "Artifact SHA-256 checksum mismatch!");
+assert.equal(calculatedChecksum, CANONICAL_CHECKSUM_SHA256, "Policy constant SHA-256 mismatch!");
+console.log(`✓ Authoritative SHA-256 checksum verified: ${calculatedChecksum}`);
+
+// 2. Check policy basics
 assert.equal(PRICING_POLICY.policyVersion, 3, "Pricing policy version must be 3");
 assert.equal(PRICING_POLICY.monthly.firstSeat, 299, "First monthly seat must be ₹299");
 assert.equal(PRICING_POLICY.monthly.additionalSeat, 149, "Additional monthly seat must be ₹149");
@@ -54,5 +88,14 @@ assert.equal(formatInr(299), "₹299");
 assert.equal(formatInr(3499), "₹3,499");
 assert.equal(formatInr(29900, true), "₹299");
 assert.equal(formatInr(349900, true), "₹3,499");
+
+// Deliberate cross-repository mismatch check
+console.log("Testing deliberate mismatch detection...");
+const tampered = { ...rawArtifact, monthly: { ...rawArtifact.monthly, additionalSeatRupees: 199 } };
+const { checksumSha256: _tHash, ...tamperedPayload } = tampered;
+const tamperedString = JSON.stringify(canonicalize(tamperedPayload), null, 2);
+const tamperedCalculated = crypto.createHash("sha256").update(tamperedString, "utf8").digest("hex");
+assert.notEqual(tamperedCalculated, checksumSha256, "Tampered payload must fail checksum verification!");
+console.log("✓ Deliberate mismatch successfully detected and rejected.");
 
 console.log("All pricing policy tests passed successfully (1 through 25 seats validated).");

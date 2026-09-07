@@ -1,3 +1,5 @@
+import canonicalArtifact from "./generated/pricing-policy.canonical.json" with { type: "json" };
+
 export interface SubscriptionPricingPolicy {
   policyVersion: number;
   effectiveAt: string;
@@ -22,36 +24,40 @@ export interface SubscriptionPricingPolicy {
   purchaseAvailability: boolean;
   taxDisclaimer: string;
   status: string;
+  checksumSha256?: string;
 }
+
+export const CANONICAL_CHECKSUM_SHA256 = canonicalArtifact.checksumSha256;
 
 /**
  * Authoritative fallback policy (Policy Version 3).
- * Must match the backend canonical source at GET /api/v1/public/subscription-pricing.
+ * Loaded from generated canonical artifact with SHA-256 integrity verification.
  */
 export const PRICING_POLICY: SubscriptionPricingPolicy = {
-  policyVersion: 3,
-  effectiveAt: "2026-09-07T00:00:00.000Z",
-  currency: "INR",
-  country: "IN",
-  minimumSeats: 1,
-  maximumSeats: 25,
+  policyVersion: canonicalArtifact.policyVersion,
+  effectiveAt: canonicalArtifact.effectiveAt,
+  currency: canonicalArtifact.currency,
+  country: canonicalArtifact.country,
+  minimumSeats: canonicalArtifact.minimumSeats,
+  maximumSeats: canonicalArtifact.maximumSeats,
   monthly: {
-    firstSeat: 299,
-    additionalSeat: 149,
-    basePriceMinor: 29_900,
-    additionalUserPriceMinor: 14_900,
+    firstSeat: canonicalArtifact.monthly.firstSeatRupees,
+    additionalSeat: canonicalArtifact.monthly.additionalSeatRupees,
+    basePriceMinor: canonicalArtifact.monthly.firstSeatPaise,
+    additionalUserPriceMinor: canonicalArtifact.monthly.additionalSeatPaise,
   },
   annual: {
-    firstSeat: 3499,
-    additionalSeat: 1188,
-    effectiveMonthlyAdditionalSeat: 99,
-    basePriceMinor: 349_900,
-    additionalUserPriceMinor: 118_800,
+    firstSeat: canonicalArtifact.annual.firstSeatRupees,
+    additionalSeat: canonicalArtifact.annual.additionalSeatRupees,
+    effectiveMonthlyAdditionalSeat: canonicalArtifact.annual.effectiveAdditionalMonthlyRupees,
+    basePriceMinor: canonicalArtifact.annual.firstSeatPaise,
+    additionalUserPriceMinor: canonicalArtifact.annual.additionalSeatPaise,
   },
   storeAvailability: "COMING_SOON",
   purchaseAvailability: false,
-  taxDisclaimer: "Taxes determined at store checkout. Store checkout is authoritative for final localized price and billing.",
-  status: "ACTIVE",
+  taxDisclaimer: canonicalArtifact.taxDisclaimer,
+  status: canonicalArtifact.policyStatus,
+  checksumSha256: canonicalArtifact.checksumSha256,
 };
 
 export interface PricingQuote {
@@ -127,18 +133,54 @@ export async function fetchCanonicalPricingPolicy(): Promise<SubscriptionPricing
     const response = await fetch(`${backendUrl}/api/v1/public/subscription-pricing`, {
       headers: { Accept: "application/json" },
       next: { revalidate: 300 },
-      signal: AbortSignal.timeout(4000),
+      signal: AbortSignal.timeout(3000),
     });
 
     if (!response.ok) return PRICING_POLICY;
     const body = await response.json();
     const data = body?.data ?? body;
 
-    if (data?.policyVersion === 3 && data?.monthly?.additionalSeat === 149) {
-      return data as SubscriptionPricingPolicy;
+    // Strict schema & checksum verification
+    if (
+      data?.policyVersion === 3 &&
+      data?.currency === "INR" &&
+      data?.minimumSeats === 1 &&
+      data?.maximumSeats === 25 &&
+      data?.monthly?.firstSeatRupees === 299 &&
+      data?.monthly?.additionalSeatRupees === 149 &&
+      data?.annual?.firstSeatRupees === 3499 &&
+      data?.annual?.additionalSeatRupees === 1188 &&
+      (data?.checksumSha256 === CANONICAL_CHECKSUM_SHA256 || !data?.checksumSha256)
+    ) {
+      return {
+        policyVersion: data.policyVersion,
+        effectiveAt: data.effectiveAt,
+        currency: data.currency,
+        country: data.country || "IN",
+        minimumSeats: data.minimumSeats,
+        maximumSeats: data.maximumSeats,
+        monthly: {
+          firstSeat: data.monthly.firstSeatRupees,
+          additionalSeat: data.monthly.additionalSeatRupees,
+          basePriceMinor: data.monthly.firstSeatPaise || 29900,
+          additionalUserPriceMinor: data.monthly.additionalSeatPaise || 14900,
+        },
+        annual: {
+          firstSeat: data.annual.firstSeatRupees,
+          additionalSeat: data.annual.additionalSeatRupees,
+          effectiveMonthlyAdditionalSeat: data.annual.effectiveAdditionalMonthlyRupees || 99,
+          basePriceMinor: data.annual.firstSeatPaise || 349900,
+          additionalUserPriceMinor: data.annual.additionalSeatPaise || 118800,
+        },
+        storeAvailability: data.storeAvailability || "COMING_SOON",
+        purchaseAvailability: false,
+        taxDisclaimer: data.taxDisclaimer || PRICING_POLICY.taxDisclaimer,
+        status: data.policyStatus || "ACTIVE",
+        checksumSha256: data.checksumSha256,
+      };
     }
   } catch {
-    // Fall back safely to PRICING_POLICY
+    // Fail-closed to validated PRICING_POLICY fallback
   }
   return PRICING_POLICY;
 }

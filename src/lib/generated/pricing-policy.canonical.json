@@ -1,0 +1,277 @@
+{
+  "$schema": "https://getcalllead.io/schemas/pricing-policy.v3.json",
+  "policyVersion": 3,
+  "effectiveAt": "2026-09-07T00:00:00.000Z",
+  "currency": "INR",
+  "country": "IN",
+  "minimumSeats": 1,
+  "maximumSeats": 25,
+  "monthly": {
+    "firstSeatPaise": 29900,
+    "additionalSeatPaise": 14900,
+    "firstSeatRupees": 299,
+    "additionalSeatRupees": 149
+  },
+  "annual": {
+    "firstSeatPaise": 349900,
+    "additionalSeatPaise": 118800,
+    "firstSeatRupees": 3499,
+    "additionalSeatRupees": 1188,
+    "effectiveAdditionalMonthlyRupees": 99
+  },
+  "taxDisclaimer": "Store checkout is authoritative for localized price, tax, eligibility, and renewal terms.",
+  "policyStatus": "ACTIVE",
+  "seatQuotes": [
+    {
+      "seats": 1,
+      "monthlyTotalPaise": 29900,
+      "monthlyTotalRupees": 299,
+      "annualTotalPaise": 349900,
+      "annualTotalRupees": 3499,
+      "twelveMonthsTotalRupees": 3588,
+      "annualSavingsRupees": 89,
+      "annualEquivalentMonthlyRupees": 292
+    },
+    {
+      "seats": 2,
+      "monthlyTotalPaise": 44800,
+      "monthlyTotalRupees": 448,
+      "annualTotalPaise": 468700,
+      "annualTotalRupees": 4687,
+      "twelveMonthsTotalRupees": 5376,
+      "annualSavingsRupees": 689,
+      "annualEquivalentMonthlyRupees": 391
+    },
+    {
+      "seats": 3,
+      "monthlyTotalPaise": 59700,
+      "monthlyTotalRupees": 597,
+      "annualTotalPaise": 587500,
+      "annualTotalRupees": 5875,
+      "twelveMonthsTotalRupees": 7164,
+      "annualSavingsRupees": 1289,
+      "annualEquivalentMonthlyRupees": 490
+    },
+    {
+      "seats": 4,
+      "monthlyTotalPaise": 74600,
+      "monthlyTotalRupees": 746,
+      "annualTotalPaise": 706300,
+      "annualTotalRupees": 7063,
+      "twelveMonthsTotalRupees": 8952,
+      "annualSavingsRupees": 1889,
+      "annualEquivalentMonthlyRupees": 589
+    },
+    {
+      "seats": 5,
+      "monthlyTotalPaise": 89500,
+      "monthlyTotalRupees": 895,
+      "annualTotalPaise": 825100,
+      "annualTotalRupees": 8251,
+      "twelveMonthsTotalRupees": 10740,
+      "annualSavingsRupees": 2489,
+      "annualEquivalentMonthlyRupees": 688
+    },
+    {
+      "seats": 6,
+      "monthlyTotalPaise": 104400,
+      "monthlyTotalRupees": 1044,
+      "annualTotalPaise": 943900,
+      "annualTotalRupees": 9439,
+      "twelveMonthsTotalRupees": 12528,
+      "annualSavingsRupees": 3089,
+      "annualEquivalentMonthlyRupees": 787
+    },
+    {
+      "seats": 7,
+      "monthlyTotalPaise": 119300,
+      "monthlyTotalRupees": 1193,
+      "annualTotalPaise": 1062700,
+      "annualTotalRupees": 10627,
+      "twelveMonthsTotalRupees": 14316,
+      "annualSavingsRupees": 3689,
+      "annualEquivalentMonthlyRupees": 886
+    },
+    {
+      "seats": 8,
+      "monthlyTotalPaise": 134200,
+      "monthlyTotalRupees": 1342,
+      "annualTotalPaise": 1181500,
+      "annualTotalRupees": 11815,
+      "twelveMonthsTotalRupees": 16104,
+      "annualSavingsRupees": 4289,
+      "annualEquivalentMonthlyRupees": 985
+    },
+    {
+      "seats": 9,
+      "monthlyTotalPaise": 149100,
+      "monthlyTotalRupees": 1491,
+      "annualTotalPaise": 1300300,
+      "annualTotalRupees": 13003,
+      "twelveMonthsTotalRupees": 17892,
+      "annualSavingsRupees": 4889,
+      "annualEquivalentMonthlyRupees": 1084
+    },
+    {
+      "seats": 10,
+      "monthlyTotalPaise": 164000,
+      "monthlyTotalRupees": 1640,
+      "annualTotalPaise": 1419100,
+      "annualTotalRupees": 14191,
+      "twelveMonthsTotalRupees": 19680,
+      "annualSavingsRupees": 5489,
+      "annualEquivalentMonthlyRupees": 1183
+    },
+    {
+      "seats": 11,
+      "monthlyTotalPaise": 178900,
+      "monthlyTotalRupees": 1789,
+      "annualTotalPaise": 1537900,
+      "annualTotalRupees": 15379,
+      "twelveMonthsTotalRupees": 21468,
+      "annualSavingsRupees": 6089,
+      "annualEquivalentMonthlyRupees": 1282
+    },
+    {
+      "seats": 12,
+      "monthlyTotalPaise": 193800,
+      "monthlyTotalRupees": 1938,
+      "annualTotalPaise": 1656700,
+      "annualTotalRupees": 16567,
+      "twelveMonthsTotalRupees": 23256,
+      "annualSavingsRupees": 6689,
+      "annualEquivalentMonthlyRupees": 1381
+    },
+    {
+      "seats": 13,
+      "monthlyTotalPaise": 208700,
+      "monthlyTotalRupees": 2087,
+      "annualTotalPaise": 1775500,
+      "annualTotalRupees": 17755,
+      "twelveMonthsTotalRupees": 25044,
+      "annualSavingsRupees": 7289,
+      "annualEquivalentMonthlyRupees": 1480
+    },
+    {
+      "seats": 14,
+      "monthlyTotalPaise": 223600,
+      "monthlyTotalRupees": 2236,
+      "annualTotalPaise": 1894300,
+      "annualTotalRupees": 18943,
+      "twelveMonthsTotalRupees": 26832,
+      "annualSavingsRupees": 7889,
+      "annualEquivalentMonthlyRupees": 1579
+    },
+    {
+      "seats": 15,
+      "monthlyTotalPaise": 238500,
+      "monthlyTotalRupees": 2385,
+      "annualTotalPaise": 2013100,
+      "annualTotalRupees": 20131,
+      "twelveMonthsTotalRupees": 28620,
+      "annualSavingsRupees": 8489,
+      "annualEquivalentMonthlyRupees": 1678
+    },
+    {
+      "seats": 16,
+      "monthlyTotalPaise": 253400,
+      "monthlyTotalRupees": 2534,
+      "annualTotalPaise": 2131900,
+      "annualTotalRupees": 21319,
+      "twelveMonthsTotalRupees": 30408,
+      "annualSavingsRupees": 9089,
+      "annualEquivalentMonthlyRupees": 1777
+    },
+    {
+      "seats": 17,
+      "monthlyTotalPaise": 268300,
+      "monthlyTotalRupees": 2683,
+      "annualTotalPaise": 2250700,
+      "annualTotalRupees": 22507,
+      "twelveMonthsTotalRupees": 32196,
+      "annualSavingsRupees": 9689,
+      "annualEquivalentMonthlyRupees": 1876
+    },
+    {
+      "seats": 18,
+      "monthlyTotalPaise": 283200,
+      "monthlyTotalRupees": 2832,
+      "annualTotalPaise": 2369500,
+      "annualTotalRupees": 23695,
+      "twelveMonthsTotalRupees": 33984,
+      "annualSavingsRupees": 10289,
+      "annualEquivalentMonthlyRupees": 1975
+    },
+    {
+      "seats": 19,
+      "monthlyTotalPaise": 298100,
+      "monthlyTotalRupees": 2981,
+      "annualTotalPaise": 2488300,
+      "annualTotalRupees": 24883,
+      "twelveMonthsTotalRupees": 35772,
+      "annualSavingsRupees": 10889,
+      "annualEquivalentMonthlyRupees": 2074
+    },
+    {
+      "seats": 20,
+      "monthlyTotalPaise": 313000,
+      "monthlyTotalRupees": 3130,
+      "annualTotalPaise": 2607100,
+      "annualTotalRupees": 26071,
+      "twelveMonthsTotalRupees": 37560,
+      "annualSavingsRupees": 11489,
+      "annualEquivalentMonthlyRupees": 2173
+    },
+    {
+      "seats": 21,
+      "monthlyTotalPaise": 327900,
+      "monthlyTotalRupees": 3279,
+      "annualTotalPaise": 2725900,
+      "annualTotalRupees": 27259,
+      "twelveMonthsTotalRupees": 39348,
+      "annualSavingsRupees": 12089,
+      "annualEquivalentMonthlyRupees": 2272
+    },
+    {
+      "seats": 22,
+      "monthlyTotalPaise": 342800,
+      "monthlyTotalRupees": 3428,
+      "annualTotalPaise": 2844700,
+      "annualTotalRupees": 28447,
+      "twelveMonthsTotalRupees": 41136,
+      "annualSavingsRupees": 12689,
+      "annualEquivalentMonthlyRupees": 2371
+    },
+    {
+      "seats": 23,
+      "monthlyTotalPaise": 357700,
+      "monthlyTotalRupees": 3577,
+      "annualTotalPaise": 2963500,
+      "annualTotalRupees": 29635,
+      "twelveMonthsTotalRupees": 42924,
+      "annualSavingsRupees": 13289,
+      "annualEquivalentMonthlyRupees": 2470
+    },
+    {
+      "seats": 24,
+      "monthlyTotalPaise": 372600,
+      "monthlyTotalRupees": 3726,
+      "annualTotalPaise": 3082300,
+      "annualTotalRupees": 30823,
+      "twelveMonthsTotalRupees": 44712,
+      "annualSavingsRupees": 13889,
+      "annualEquivalentMonthlyRupees": 2569
+    },
+    {
+      "seats": 25,
+      "monthlyTotalPaise": 387500,
+      "monthlyTotalRupees": 3875,
+      "annualTotalPaise": 3201100,
+      "annualTotalRupees": 32011,
+      "twelveMonthsTotalRupees": 46500,
+      "annualSavingsRupees": 14489,
+      "annualEquivalentMonthlyRupees": 2668
+    }
+  ],
+  "checksumSha256": "34ae9c486d558880a7701bd313fc29428d5465329bb4dcf363a9afb7cea8bad1"
+}

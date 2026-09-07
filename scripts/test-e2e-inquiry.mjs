@@ -120,6 +120,48 @@ async function testValidInquiry() {
   const delResult = await delRes.json();
   assert.ok(delResult.data.reference, "Deletion reference returned");
   console.log(`  ✓ Account deletion request logged: ${delResult.data.reference}`);
+
+  // Test 6: Contact inquiry (CONTACT_REQUEST)
+  console.log("\n[Test 6] Submit valid contact inquiry (CONTACT_REQUEST) with HMAC authentication");
+  const contactIdempotencyKey = randomUUID();
+  const contactPayload = {
+    inquiryType: "CONTACT_REQUEST",
+    fullName: "Priya Sharma",
+    companyName: "Apex Logistics Ltd.",
+    phoneNumber: "+919812345678",
+    workEmail: "priya@apexlogistics.in",
+    teamSizeRange: "1-5",
+    callingFlow: "Enterprise Consultation",
+    message: "We need custom branch call assignment and SLA tracking.",
+    consentAt: new Date().toISOString(),
+    consentVersion: "v2026-09-07",
+    consentAccepted: true,
+    sourcePage: "/contact",
+    idempotencyKey: contactIdempotencyKey,
+  };
+
+  const contactPayloadString = JSON.stringify(contactPayload);
+  const contactHeaders = createServiceHmacHeaders(
+    "POST",
+    "/api/v1/integrations/website/inquiries",
+    contactPayloadString,
+  );
+
+  const contactRes = await fetch(`${backendUrl}/api/v1/integrations/website/inquiries`, {
+    method: "POST",
+    headers: contactHeaders,
+    body: contactPayloadString,
+  });
+
+  assert.equal(contactRes.status, 201, `Expected HTTP 201, got ${contactRes.status}`);
+  const contactResult = await contactRes.json();
+  assert.ok(contactResult.data.reference, "Must return reference code");
+  assert.match(
+    contactResult.data.reference,
+    /^CON-[A-Z0-9]{4}-[A-Z0-9]{8}$/,
+    "Must match contact reference format (CON-...)",
+  );
+  console.log(`  ✓ Contact inquiry committed successfully. Public Reference: ${contactResult.data.reference}`);
 }
 
 testValidInquiry()
