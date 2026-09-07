@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  if (request.headers.get("host")?.toLowerCase() === "www.getcalllead.io") {
+  const host = request.headers.get("host")?.toLowerCase().split(":", 1)[0];
+
+  if (host === "www.getcalllead.io") {
     const canonical = request.nextUrl.clone();
     canonical.protocol = "https:";
-    canonical.host = "getcalllead.io";
+    canonical.hostname = "getcalllead.io";
+    canonical.port = "";
     return NextResponse.redirect(canonical, 308);
   }
   return NextResponse.next();
