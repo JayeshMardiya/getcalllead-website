@@ -284,6 +284,9 @@ export default function DeleteAccountPage() {
                   <p className="mt-0.5 leading-relaxed">
                     Account deletion is permanent. Once processed, you will lose all access to your assigned leads, calendar follow-ups, and organization workspace.
                   </p>
+                  <p className="mt-2 leading-relaxed">
+                    Deleting your Call Leads account does not automatically cancel a subscription billed by Apple or Google. Cancel it separately in your App Store or Google Play subscription settings to prevent future renewal charges.
+                  </p>
                 </div>
               </div>
             </div>
