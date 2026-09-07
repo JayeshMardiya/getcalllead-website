@@ -80,7 +80,7 @@ export function PricingSection() {
             <span>Store checkout is authoritative for localized price, tax, eligibility, and renewal terms.</span>
           </div>
           <p className="mt-2 text-xs text-slate-500">
-            Published prices use the current version-1 backend pricing policy. Purchase options appear only after the matching store and RevenueCat products are verified.
+            Published prices use the current backend pricing policy. Purchase options appear only after the matching store and RevenueCat products are verified.
           </p>
         </div>
       </div>

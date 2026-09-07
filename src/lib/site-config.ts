@@ -396,7 +396,7 @@ export const SITE_CONFIG = {
       features: [
         "1–25 licensed users",
         "All Call Leads Pro capabilities",
-        "Seven-day trial for eligible self-registrations",
+        "Purchase required after administrator registration",
         "Upgrade and downgrade through store subscription controls",
         "Taxes are determined by the applicable app store",
       ],
