@@ -24,7 +24,7 @@ export function FaqSection() {
             Answers you can count on.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-slate-600">
-            Everything you need to know about Call Leads, the calling workflow, subscriptions, and support.
+            Everything you need to know about GetCallLead, the calling workflow, subscriptions, and support.
           </p>
         </div>
 

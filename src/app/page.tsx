@@ -1,12 +1,9 @@
 import React from "react";
 import { HeroSection } from "@/components/marketing/HeroSection";
-import { ProductProofSection } from "@/components/marketing/ProductProofSection";
 import { ProblemSection } from "@/components/marketing/ProblemSection";
 import { HowItWorksSection } from "@/components/marketing/HowItWorksSection";
 import { CoreFeaturesBento } from "@/components/marketing/CoreFeaturesBento";
-import { ProductWalkthrough } from "@/components/marketing/ProductWalkthrough";
 import { RoleBenefitsSection } from "@/components/marketing/RoleBenefitsSection";
-import { UseCasesSection } from "@/components/marketing/UseCasesSection";
 import { PricingSection } from "@/components/marketing/PricingSection";
 import { FaqSection } from "@/components/marketing/FaqSection";
 import { FinalCtaSection } from "@/components/marketing/FinalCtaSection";
@@ -14,37 +11,28 @@ import { FinalCtaSection } from "@/components/marketing/FinalCtaSection";
 export default function HomePage() {
   return (
     <>
-      {/* Section 2: Hero */}
+      {/* 1. Hero: Value proposition, Request a Demo CTA, Conceptual Workflow */}
       <HeroSection />
 
-      {/* Section 3: Product Proof */}
-      <ProductProofSection />
-
-      {/* Section 4: Problem Statement */}
+      {/* 2. Phone-sales problem: Forgotten follow-ups, unclear ownership, limited visibility */}
       <ProblemSection />
 
-      {/* Section 5: How It Works */}
+      {/* 3. Three-step workflow: Intake & qualify, Call & record outcome, Schedule next action */}
       <HowItWorksSection />
 
-      {/* Section 6: Core Features Bento */}
+      {/* 4. Core CRM Capabilities: Structured intake, pipeline, calendar, ownership */}
       <CoreFeaturesBento />
 
-      {/* Section 7: Product Walkthrough */}
-      <ProductWalkthrough />
-
-      {/* Section 8: Benefits by Role */}
+      {/* 5. Reps and managers: Role-specific value & operational clarity */}
       <RoleBenefitsSection />
 
-      {/* Section 9: Use Cases */}
-      <UseCasesSection />
-
-      {/* Section 10: Pricing */}
+      {/* 6. Authoritative Pricing: Policy V3, Interactive seat calculator (1-25 seats), exact totals & savings */}
       <PricingSection />
 
-      {/* Section 11: Frequently Asked Questions */}
+      {/* 7. Security and FAQ: Workspace scoping, HTTPS, Native dialler, Store availability */}
       <FaqSection />
 
-      {/* Section 12: Final Conversion Block */}
+      {/* 8. Final CTA: Request a Demo, verified support contact */}
       <FinalCtaSection />
     </>
   );

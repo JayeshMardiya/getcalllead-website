@@ -149,7 +149,7 @@ export default function DeleteAccountPage() {
             <div>
               <h2 className="text-xl font-bold text-slate-900">Step 1: Enter Account Details</h2>
               <p className="mt-1 text-xs text-slate-500">
-                Enter the email or phone number used to register your Call Leads account.
+                Enter the email or phone number used to register your GetCallLead account.
               </p>
             </div>
 
@@ -285,7 +285,7 @@ export default function DeleteAccountPage() {
                     Account deletion is permanent. Once processed, you will lose all access to your assigned leads, calendar follow-ups, and organization workspace.
                   </p>
                   <p className="mt-2 leading-relaxed">
-                    Deleting your Call Leads account does not automatically cancel a subscription billed by Apple or Google. Cancel it separately in your App Store or Google Play subscription settings to prevent future renewal charges.
+                    Deleting your GetCallLead account does not automatically cancel a subscription billed by Apple or Google. Cancel it separately in your App Store or Google Play subscription settings to prevent future renewal charges.
                   </p>
                 </div>
               </div>

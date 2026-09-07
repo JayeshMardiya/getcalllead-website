@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types scripts/run-website-tests.mjs",
+    "test:pricing": "node --experimental-strip-types scripts/validate-pricing-policy.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

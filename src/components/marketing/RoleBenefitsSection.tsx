@@ -19,7 +19,7 @@ export function RoleBenefitsSection() {
             Built for how your team actually works.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-slate-600">
-            Whether you are on the phones making callbacks or managing a sales department, Call Leads delivers focused clarity.
+            Whether you are on the phones making callbacks or managing a sales department, GetCallLead delivers focused clarity.
           </p>
 
           {/* Toggle Button */}

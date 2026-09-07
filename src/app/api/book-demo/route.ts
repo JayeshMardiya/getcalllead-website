@@ -1,135 +1,220 @@
 import { createHash, randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
+import { createServiceHmacHeaders } from "@/lib/server-hmac";
 
 const MAX_BODY_BYTES = 16 * 1024;
 const RATE_WINDOW_MS = 15 * 60 * 1000;
-const RATE_LIMIT = 8;
-const counters = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_PER_IP = 15;
+const ipSubmissionCounters = new Map<string, { count: number; resetAt: number }>();
 
-interface LeadSubmission {
-  name: string;
+interface PublicDemoSubmission {
+  fullName: string;
   companyName: string;
-  workEmail: string;
-  phone: string;
-  teamSize: string;
-  businessType: string;
+  phoneNumber: string;
+  workEmail?: string;
+  teamSizeRange: string;
+  callingFlow?: string;
   message?: string;
   sourcePage?: string;
   utmSource?: string;
   utmMedium?: string;
   utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
   consentAccepted: boolean;
+  consentVersion?: string;
+  idempotencyKey?: string;
   honeypot?: string;
+  inquiryType?: "DEMO_REQUEST" | "CONTACT_REQUEST";
 }
 
-function rateLimitKey(request: NextRequest) {
-  const address = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  return createHash("sha256").update(address).digest("hex");
+function getClientHmacIp(request: NextRequest): string {
+  const secret = process.env.RATE_LIMIT_SALT || "rate-limit-salt-v1";
+  const rawIp =
+    request.headers.get("cf-connecting-ip") ||
+    request.headers.get("x-real-ip") ||
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    "127.0.0.1";
+  return createHash("sha256").update(`${secret}:${rawIp}`).digest("hex");
 }
 
-function isRateLimited(request: NextRequest) {
+function checkRateLimit(request: NextRequest): boolean {
   const now = Date.now();
-  const key = rateLimitKey(request);
-  const current = counters.get(key);
+  const ipHash = getClientHmacIp(request);
+  const current = ipSubmissionCounters.get(ipHash);
+
   if (!current || current.resetAt <= now) {
-    if (counters.size > 10_000) {
-      for (const [storedKey, counter] of counters) {
-        if (counter.resetAt <= now) counters.delete(storedKey);
+    if (ipSubmissionCounters.size > 10_000) {
+      for (const [key, val] of ipSubmissionCounters.entries()) {
+        if (val.resetAt <= now) ipSubmissionCounters.delete(key);
       }
     }
-    counters.set(key, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    ipSubmissionCounters.set(ipHash, { count: 1, resetAt: now + RATE_WINDOW_MS });
     return false;
   }
-  current.count += 1;
-  return current.count > RATE_LIMIT;
-}
 
-function genericReference() {
-  return `DEMO-${randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase()}`;
+  current.count += 1;
+  return current.count > RATE_LIMIT_PER_IP;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
-      return NextResponse.json({ error: "Content-Type must be application/json." }, { status: 415 });
+    const contentType = request.headers.get("content-type")?.toLowerCase() || "";
+    if (!contentType.startsWith("application/json")) {
+      return NextResponse.json(
+        { error: "Content-Type must be application/json." },
+        { status: 415 },
+      );
     }
-    if (isRateLimited(request)) {
-      return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+
+    if (checkRateLimit(request)) {
+      return NextResponse.json(
+        { error: "Too many requests from this network. Please try again shortly or contact support@getcalllead.io." },
+        { status: 429 },
+      );
     }
 
     const rawBody = await request.text();
     if (Buffer.byteLength(rawBody, "utf8") > MAX_BODY_BYTES) {
-      return NextResponse.json({ error: "Request body is too large." }, { status: 413 });
+      return NextResponse.json({ error: "Request payload exceeds allowed limit." }, { status: 413 });
     }
-    const body = JSON.parse(rawBody) as LeadSubmission;
 
-    if (body.honeypot?.trim()) {
+    let body: PublicDemoSubmission;
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ error: "Malformed JSON payload." }, { status: 400 });
+    }
+
+    // Honeypot detection: silent generic acceptance without persisting PII
+    if (body.honeypot && body.honeypot.trim().length > 0) {
       return NextResponse.json(
-        { success: true, reference: genericReference(), message: "Your request has been received." },
+        {
+          success: true,
+          reference: "REF-PROCESSED",
+          message: "Your request has been received.",
+        },
         { status: 201 },
       );
     }
-    if (!body.name || body.name.trim().length < 2) {
-      return NextResponse.json({ error: "Please enter a valid full name." }, { status: 400 });
-    }
-    const workEmail = body.workEmail?.trim().toLowerCase();
-    if (!workEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(workEmail)) {
-      return NextResponse.json({ error: "Please provide a valid work email address." }, { status: 400 });
-    }
-    if (!body.consentAccepted) {
-      return NextResponse.json({ error: "Consent to process inquiry data is required." }, { status: 400 });
+
+    // Validation
+    const fullName = body.fullName?.trim() || "";
+    if (fullName.length < 2 || fullName.length > 120) {
+      return NextResponse.json(
+        { error: "Please enter your full name (2 to 120 characters)." },
+        { status: 400 },
+      );
     }
 
-    const backendUrl = process.env.BACKEND_API_URL?.replace(/\/$/, "");
-    if (!backendUrl) {
+    const companyName = body.companyName?.trim() || "";
+    if (companyName.length < 2 || companyName.length > 150) {
       return NextResponse.json(
-        { error: "Demo requests are temporarily unavailable. Please email sales@getcalllead.io." },
+        { error: "Please enter your company or business name." },
+        { status: 400 },
+      );
+    }
+
+    const phoneNumber = body.phoneNumber?.trim() || "";
+    const cleanPhone = phoneNumber.replace(/[^\d+]/g, "");
+    if (cleanPhone.length < 7 || cleanPhone.length > 20) {
+      return NextResponse.json(
+        { error: "Please provide a valid phone or WhatsApp number." },
+        { status: 400 },
+      );
+    }
+
+    let workEmail: string | undefined = undefined;
+    if (body.workEmail && body.workEmail.trim().length > 0) {
+      const email = body.workEmail.trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 191) {
+        return NextResponse.json(
+          { error: "Please provide a valid email address or leave it blank." },
+          { status: 400 },
+        );
+      }
+      workEmail = email;
+    }
+
+    if (!body.consentAccepted) {
+      return NextResponse.json(
+        { error: "Consent to receive follow-up communication is required." },
+        { status: 400 },
+      );
+    }
+
+    const backendUrl = process.env.BACKEND_API_URL?.replace(/\/$/, "") || "http://localhost:3000";
+    const idempotencyKey = body.idempotencyKey?.trim() || randomUUID();
+
+    const canonicalBackendPayload = {
+      inquiryType: body.inquiryType || "DEMO_REQUEST",
+      fullName,
+      companyName,
+      phoneNumber: cleanPhone,
+      workEmail,
+      teamSizeRange: (body.teamSizeRange || "1-5").trim().slice(0, 50),
+      callingFlow: body.callingFlow ? body.callingFlow.trim().slice(0, 100) : undefined,
+      message: body.message ? body.message.trim().slice(0, 1000) : undefined,
+      consentAt: new Date().toISOString(),
+      consentVersion: body.consentVersion || "v2026-09-07",
+      consentAccepted: true,
+      sourcePage: (body.sourcePage || "/book-demo").slice(0, 200),
+      utmSource: body.utmSource ? body.utmSource.slice(0, 100) : undefined,
+      utmMedium: body.utmMedium ? body.utmMedium.slice(0, 100) : undefined,
+      utmCampaign: body.utmCampaign ? body.utmCampaign.slice(0, 100) : undefined,
+      utmContent: body.utmContent ? body.utmContent.slice(0, 100) : undefined,
+      utmTerm: body.utmTerm ? body.utmTerm.slice(0, 100) : undefined,
+      referrerOrigin: request.headers.get("referer")?.slice(0, 255) || undefined,
+      idempotencyKey,
+    };
+
+    const payloadJson = JSON.stringify(canonicalBackendPayload);
+    const hmacHeaders = createServiceHmacHeaders(
+      "POST",
+      "/api/v1/integrations/website/inquiries",
+      payloadJson,
+    );
+
+    const backendResponse = await fetch(`${backendUrl}/api/v1/integrations/website/inquiries`, {
+      method: "POST",
+      headers: {
+        ...hmacHeaders,
+        "x-forwarded-for": request.headers.get("x-forwarded-for") || "127.0.0.1",
+      },
+      body: payloadJson,
+      cache: "no-store",
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (!backendResponse.ok) {
+      const errText = await backendResponse.text().catch(() => "");
+      console.error(`[BACKEND INGESTION ERROR] HTTP ${backendResponse.status}: ${errText}`);
+      return NextResponse.json(
+        {
+          error: "Inquiry service is temporarily unavailable. Please email us directly at support@getcalllead.io.",
+        },
         { status: 503 },
       );
     }
 
-    const dedupeWindow = Math.floor(Date.now() / (10 * 60 * 1000));
-    const idempotencyKey = createHash("sha256")
-      .update(`${workEmail}|${body.phone || ""}|${body.sourcePage || "/book-demo"}|${dedupeWindow}`)
-      .digest("hex");
-    const payload = {
-      name: body.name.trim().slice(0, 100),
-      companyName: (body.companyName || "Not specified").trim().slice(0, 100),
-      workEmail,
-      phone: (body.phone || "").replace(/[^\d+()\s-]/g, "").slice(0, 30),
-      teamSize: (body.teamSize || "Not specified").slice(0, 50),
-      businessType: (body.businessType || "General").slice(0, 50),
-      message: (body.message || "").trim().slice(0, 1000),
-      sourcePage: (body.sourcePage || "/book-demo").slice(0, 200),
-      utmSource: (body.utmSource || "").slice(0, 100),
-      utmMedium: (body.utmMedium || "").slice(0, 100),
-      utmCampaign: (body.utmCampaign || "").slice(0, 100),
-      consentAt: new Date().toISOString(),
-    };
-
-    const response = await fetch(`${backendUrl}/api/v1/public/website-leads`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "Idempotency-Key": idempotencyKey },
-      body: JSON.stringify(payload),
-      cache: "no-store",
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (!response.ok) throw new Error(`Lead service returned ${response.status}`);
-    const result = await response.json();
-    const data = result?.data ?? result;
+    const backendResult = await backendResponse.json();
+    const data = backendResult?.data ?? backendResult;
 
     return NextResponse.json(
       {
         success: true,
         reference: data.reference,
+        inquiryType: data.inquiryType,
         message: "Your request has been received.",
       },
       { status: 201 },
     );
   } catch (error) {
-    console.error("[PUBLIC LEAD SUBMISSION FAILED]", error instanceof Error ? error.message : "unknown error");
+    console.error("[INQUIRY ROUTE ERROR]", error instanceof Error ? error.message : "unknown error");
     return NextResponse.json(
-      { error: "We could not record your request. Please email sales@getcalllead.io." },
+      {
+        error: "Unable to submit your request at this time. Please contact support@getcalllead.io.",
+      },
       { status: 503 },
     );
   }

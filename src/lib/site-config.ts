@@ -10,18 +10,18 @@ export interface FeatureCard {
   title: string;
   tagline: string;
   description: string;
-  screenshot: string;
   badge: string;
+  iconName: string;
   colSpan?: string;
 }
 
 export interface WalkthroughStep {
   id: string;
-  tabLabel: string;
+  stepNumber: string;
   title: string;
   summary: string;
   details: string[];
-  screenshot: string;
+  iconName: string;
 }
 
 export interface FaqItem {
@@ -90,72 +90,77 @@ const stores = {
   }),
 } as const;
 
+export const HAS_LIVE_STORE =
+  stores.android.enabled || stores.ios.enabled;
+
 export const SITE_CONFIG = {
-  name: "Call Leads",
-  seoTitle: "Call Leads – Sales CRM | Mobile CRM Built for Every Call",
+  name: "GetCallLead",
+  seoTitle: "GetCallLead – Mobile Sales CRM for Phone-First Teams",
   tagline: "Call. Follow up. Close.",
   description:
-    "Mobile sales CRM built around every call. Turn call activity into assigned leads, schedule follow-ups, and keep your sales team focused on the next action.",
+    "Mobile sales CRM built around phone-first workflows. Assign incoming call leads, schedule follow-ups, and keep reps accountable.",
   domain: "https://getcalllead.io",
   category: "Mobile sales CRM",
   supportEmail: "support@getcalllead.io",
   company: {
-    legalName: process.env.NEXT_PUBLIC_LEGAL_NAME?.trim() || "Invention Hill",
-    address: process.env.NEXT_PUBLIC_BUSINESS_ADDRESS?.trim() || "",
+    legalName: "Invention Hill",
+    operatorText: "GetCallLead is operated by Invention Hill",
     contactEmail: "support@getcalllead.io",
-    salesEmail: "sales@getcalllead.io",
+    salesEmail: "support@getcalllead.io",
     securityEmail: "support@getcalllead.io",
   },
-  productStatus: "production",
+  productStatus: "pre-release-evaluation",
   stores,
   cta: {
-    primary: "Download Call Leads",
-    secondary: "Book a Demo",
+    primary: "Request a Demo",
+    secondary: "See How It Works",
   },
   nav: [
     { label: "Features", href: "/features" },
     { label: "How It Works", href: "/#how-it-works" },
     { label: "Pricing", href: "/pricing" },
+    { label: "Security", href: "/security" },
     { label: "Support", href: "/support" },
   ] as NavItem[],
   quickLinks: [
     { label: "Features", href: "/features" },
     { label: "How It Works", href: "/#how-it-works" },
     { label: "Pricing", href: "/pricing" },
-    { label: "Download App", href: "/download" },
-    { label: "Book a Demo", href: "/book-demo" },
+    { label: "Request a Demo", href: "/book-demo" },
+    { label: "Security", href: "/security" },
     { label: "Support Hub", href: "/support" },
   ],
   legalLinks: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
+    { label: "Security", href: "/security" },
     { label: "Account & Data Deletion", href: "/delete-account" },
     { label: "Contact Us", href: "/contact" },
   ],
   hero: {
-    eyebrow: "Mobile sales CRM built around every call",
-    headline: "Turn every call into a lead you can close.",
+    eyebrow: "Phone-first sales CRM",
+    headline: "Turn phone calls into assigned leads and closed deals.",
     supportingText:
-      "Capture call activity, assign leads, schedule follow-ups, and keep your sales team focused on the next action.",
+      "GetCallLead helps sales teams capture call activity, assign ownership, schedule follow-up reminders, and keep managers informed.",
     primaryCta: {
-      label: "Download Call Leads",
-      href: "/download",
-    },
-    secondaryCta: {
-      label: "Book a Demo",
+      label: "Request a Demo",
       href: "/book-demo",
     },
-    trustNote: "Built for sales teams that work through calls",
+    secondaryCta: {
+      label: "See How It Works",
+      href: "/#how-it-works",
+    },
+    trustNote: "Designed for phone-driven sales teams across India",
   },
   problems: [
     {
-      title: "Call details stay in personal call logs",
+      title: "Call details remain in personal call logs",
       description:
-        "When reps make sales calls from personal diallers, client contact info and notes stay isolated on private devices, creating dark holes in customer records.",
+        "When reps make sales calls from personal diallers, client contact info and notes stay isolated on private devices rather than in a team workspace.",
       icon: "PhoneOff",
     },
     {
-      title: "Nobody knows who owns the lead",
+      title: "Unclear lead ownership across the team",
       description:
         "Inquiries arrive without unambiguous assignment. Multiple salespeople duplicate work, or leads bounce between team members until they go cold.",
       icon: "UsersRound",
@@ -163,317 +168,197 @@ export const SITE_CONFIG = {
     {
       title: "Follow-ups depend on human memory",
       description:
-        "Without strict calendar reminders linked directly to the contact, promised callbacks get forgotten during busy calling hours.",
+        "Without structured calendar reminders linked directly to the contact, promised callbacks get forgotten during busy calling hours.",
       icon: "CalendarClock",
     },
     {
-      title: "Managers have zero pipeline visibility",
+      title: "Limited visibility into calling outcomes",
       description:
-        "Leaders cannot view call outcomes, pending follow-ups, or neglected leads until end-of-quarter revenue misses occur.",
+        "Sales leaders cannot view call outcomes, pending follow-ups, or neglected leads until missed revenue targets occur.",
       icon: "EyeOff",
     },
   ],
   howItWorks: [
     {
-      step: "01",
-      name: "Capture",
-      headline: "Turn calls and caller details into organized leads",
-      description:
-        "Quickly record incoming or outgoing prospects with structured contact info, organization tags, and instant context right on your phone.",
-      screenshot: "/screenshots/03-lead-capture.png",
+      stepNumber: "01",
+      title: "Capture and Qualify",
+      summary: "Add or receive a lead through released mobile and web forms.",
+      details: [
+        "Record contact name, phone number, and business context.",
+        "Add initial inquiry notes and categorize by business priority.",
+        "Leads enter your organization workspace immediately.",
+      ],
+      iconName: "UserPlus",
     },
     {
-      step: "02",
-      name: "Follow up",
-      headline: "Assign ownership, schedule the next call, and log outcomes",
-      description:
-        "Assign every deal to a designated salesperson. Schedule the next follow-up with calendar alerts, record outcome notes, and update lead stages.",
-      screenshot: "/screenshots/04-lead-details.png",
+      stepNumber: "02",
+      title: "Call and Record Outcome",
+      summary: "Initiate calls via the native phone dialler and log structured outcomes.",
+      details: [
+        "Tap to initiate the phone call through your device's native dialler.",
+        "GetCallLead does not secretly record telephone audio.",
+        "Reps manually record outcomes, call notes, and updated deal stages.",
+      ],
+      iconName: "PhoneCall",
     },
     {
-      step: "03",
-      name: "Close",
-      headline: "Track progress, prevent forgotten leads, and stay accountable",
-      description:
-        "Move prospects through qualified, proposal sent, converted, and won stages. Give managers complete oversight of team activity and overdue tasks.",
-      screenshot: "/screenshots/01-lead-overview.png",
+      stepNumber: "03",
+      title: "Schedule Next Action",
+      summary: "Never hang up without scheduling the next callback commitment.",
+      details: [
+        "Select specific callback date, time, and discussion objective.",
+        "Filter follow-ups due today, upcoming, or overdue.",
+        "Assign follow-up reminders to the responsible sales rep.",
+      ],
+      iconName: "CalendarCheck",
     },
-  ],
+  ] as WalkthroughStep[],
   features: [
     {
       id: "capture",
-      title: "Lead Capture from Calls",
-      tagline: "Never lose a number",
+      title: "Structured Lead Intake",
+      tagline: "Organized contact records",
       description:
-        "Keep caller information connected to the sales workflow. Create and qualify leads right from call interactions with structured fields.",
-      screenshot: "/screenshots/03-lead-capture.png",
-      badge: "Fast Capture",
-      colSpan: "col-span-12 lg:col-span-7",
+        "Keep caller information connected to the sales workflow. Create and qualify leads with structured contact details and source tags.",
+      badge: "Intake",
+      iconName: "UserPlus",
+      colSpan: "col-span-12 lg:col-span-6",
     },
     {
       id: "pipeline",
-      title: "Visual Lead Pipeline",
-      tagline: "Stage-by-stage clarity",
+      title: "Stage-by-Stage Pipeline",
+      tagline: "Clear deal progression",
       description:
-        "Organize leads by stage, status, and priority. Track deals from initial contact to proposal sent and final conversion.",
-      screenshot: "/screenshots/01-lead-overview.png",
+        "Track prospects from initial contact to proposal sent and final conversion with defined team pipeline stages.",
       badge: "Pipeline",
-      colSpan: "col-span-12 lg:col-span-5",
+      iconName: "Kanban",
+      colSpan: "col-span-12 lg:col-span-6",
     },
     {
       id: "calendar",
       title: "Follow-Up Scheduling",
       tagline: "Actionable calendar reminders",
       description:
-        "Create clear next actions and calendar reminders. Filter follow-ups due today, upcoming, or overdue to ensure zero lost leads.",
-      screenshot: "/screenshots/05-follow-up-calendar.png",
+        "Create clear next actions with designated dates and times. Filter tasks by Due Today, Upcoming, and Overdue.",
       badge: "Schedule",
-      colSpan: "col-span-12 lg:col-span-5",
+      iconName: "Calendar",
+      colSpan: "col-span-12 lg:col-span-6",
     },
     {
       id: "assignment",
-      title: "Team Assignment & Ownership",
-      tagline: "Definite responsibility",
+      title: "Team Ownership & Assignment",
+      tagline: "Clear accountability",
       description:
-        "Assign every lead to the correct team member. Prevent lead collision and clarify accountability across all field and desk reps.",
-      screenshot: "/screenshots/06-team-management.png",
-      badge: "Delegation",
-      colSpan: "col-span-12 lg:col-span-7",
-    },
-    {
-      id: "history",
-      title: "Call Schedule & Outcome History",
-      tagline: "Audit trail of every touchpoint",
-      description:
-        "View upcoming follow-ups, historical call outcomes, and timestamped notes in a chronological activity timeline.",
-      screenshot: "/screenshots/04-lead-details.png",
-      badge: "Activity",
-      colSpan: "col-span-12 lg:col-span-7",
-    },
-    {
-      id: "manager-view",
-      title: "Manager Visibility & Reporting",
-      tagline: "Executive oversight",
-      description:
-        "Understand ownership, pending work, and team calling cadence without micromanaging daily sales activities.",
-      screenshot: "/screenshots/02-lead-list.png",
-      badge: "Governance",
-      colSpan: "col-span-12 lg:col-span-5",
+        "Assign every lead to an authorized team member. Clarify who owns the next touchpoint and prevent duplicate outreach.",
+      badge: "Team",
+      iconName: "Users",
+      colSpan: "col-span-12 lg:col-span-6",
     },
   ] as FeatureCard[],
-  walkthrough: [
-    {
-      id: "capture-lead",
-      tabLabel: "1. Capture a Lead",
-      title: "Instant Mobile Lead Intake",
-      summary: "Transform incoming conversations into actionable records in seconds.",
-      details: [
-        "Capture name, phone number, and company without heavy data entry.",
-        "Add initial discussion context and tag the inquiry category.",
-        "Ensure leads immediately enter the team's shared pipeline.",
-      ],
-      screenshot: "/screenshots/03-lead-capture.png",
-    },
-    {
-      id: "assign-ownership",
-      tabLabel: "2. Assign Ownership",
-      title: "Clear Responsibility for Every Account",
-      summary: "Direct leads to the right rep with single-tap delegation.",
-      details: [
-        "Assign sales ownership to prevent duplicate calls or forgotten prospects.",
-        "Maintain role-based security across your organization.",
-        "Reps receive instant in-app alerts when new leads are assigned.",
-      ],
-      screenshot: "/screenshots/06-team-management.png",
-    },
-    {
-      id: "schedule-followup",
-      tabLabel: "3. Schedule Follow-up",
-      title: "Actionable Reminders & Agenda",
-      summary: "Lock in callback commitments before ending the conversation.",
-      details: [
-        "Pick exact date, time, and specific callback objective.",
-        "Categorize follow-ups by urgency: Due Today, Upcoming, or Overdue.",
-        "Syncs with calendar workflow so scheduled calls are never missed.",
-      ],
-      screenshot: "/screenshots/05-follow-up-calendar.png",
-    },
-    {
-      id: "review-history",
-      tabLabel: "4. Review Call History",
-      title: "Complete Context for Every Touchpoint",
-      summary: "View chronological interaction notes before dialing.",
-      details: [
-        "Log outcomes: Answered, Busy, Proposal Requested, or Follow-up Needed.",
-        "Speech dictation support for fast mobile note-taking.",
-        "Review previous objections and promises before each conversation.",
-      ],
-      screenshot: "/screenshots/04-lead-details.png",
-    },
-    {
-      id: "track-pipeline",
-      tabLabel: "5. Track Pipeline Progress",
-      title: "Visual Sales Velocity",
-      summary: "Watch deals advance from qualified prospect to closed business.",
-      details: [
-        "Monitor stage progression: Qualified, Proposal Sent, Converted, Lost.",
-        "Instant filtering by sales representative, date range, or status tag.",
-        "Identify stalled deals early and re-engage dormant accounts.",
-      ],
-      screenshot: "/screenshots/01-lead-overview.png",
-    },
-  ] as WalkthroughStep[],
   roles: {
     reps: {
       title: "For Sales Representatives",
-      subtitle: "Focus on closing conversations, not wrestling complicated desktop CRMs.",
+      subtitle: "Focus on closing conversations without administrative complexity.",
       points: [
-        "Know exactly who to call next with prioritized daily task lists.",
-        "Keep all contact details, previous notes, and deal history on your phone.",
-        "Avoid embarrassing forgotten follow-ups with automated agenda alerts.",
-        "Update lead status and log call outcomes in seconds after hanging up.",
+        "Know exactly who to call next with prioritized daily task views.",
+        "Keep client contact details, notes, and deal history accessible on mobile.",
+        "Avoid forgotten follow-ups with scheduled calendar callback alerts.",
+        "Log outcomes and update stages quickly after completing calls.",
       ],
     },
     managers: {
       title: "For Sales Managers",
-      subtitle: "Get complete operational clarity on team execution without chasing reps.",
+      subtitle: "Operational clarity on team execution and pending callbacks.",
       points: [
-        "See lead ownership clearly with no orphaned or unassigned contacts.",
-        "Review pending, completed, and overdue follow-ups across the entire roster.",
-        "Monitor lead movement through pipeline stages in real time.",
-        "Identify neglected leads immediately to redistribute to active reps.",
+        "Review lead ownership clearly across your sales roster.",
+        "View pending, completed, and overdue follow-ups across the team.",
+        "Monitor lead progression through pipeline stages.",
+        "Reassign neglected or unassigned leads to active reps.",
       ],
     },
   },
-  useCases: [
-    {
-      title: "Inside Sales Teams",
-      badge: "High-Volume Calling",
-      description:
-        "Handle inbound inquiries and scheduled outbound follow-ups with fast outcome logging and zero lost context.",
-      benefits: ["Rapid lead assignment", "Call outcome notes", "Follow-up calendar synchronization"],
-    },
-    {
-      title: "Field Sales Teams",
-      badge: "On-the-Go Mobility",
-      description:
-        "Log updates from customer visits and mobile calls immediately from the road without waiting to sit at a desk.",
-      benefits: ["Mobile-first interface", "Dictate notes on the move", "Offline-resilient data handling"],
-    },
-    {
-      title: "Phone-Driven Small Businesses",
-      badge: "Contractors, Clinics & Agencies",
-      description:
-        "Ensure every phone consultation turns into an assigned appointment and quote follow-up rather than a forgotten call log.",
-      benefits: ["Zero enterprise bloat", "Simple 3-step workflow", "Immediate team accountability"],
-    },
-  ],
   pricingTiers: [
     {
       id: "pro-monthly",
-      name: "Call Leads Pro — Monthly",
-      description: "Flexible monthly billing for teams of up to 25 licensed users.",
-      priceNote: `${formatInr(PRICING_POLICY.monthly.basePriceMinor)} for 1 user`,
-      billingFrequency: `+ ${formatInr(PRICING_POLICY.monthly.additionalUserPriceMinor)} per additional licensed user, billed monthly`,
+      name: "GetCallLead Pro — Monthly",
+      description: "Published India list price for teams of 1 to 25 licensed users.",
+      priceNote: "₹299/mo for first user",
+      billingFrequency: "+ ₹149/mo per additional licensed user",
       features: [
-        "1–25 licensed users",
-        "Lead capture and pipeline stages",
+        "1–25 licensed users supported",
+        "Lead intake and pipeline stages",
         "Follow-up scheduling and reminders",
         "Team assignment and manager visibility",
-        "Subscription managed through the mobile store",
+        "Planned mobile store subscription",
       ],
-      ctaLabel: "Download the App",
-      ctaHref: "/download",
+      ctaLabel: "Request a Demo",
+      ctaHref: "/book-demo",
       highlighted: false,
     },
     {
       id: "pro-annual",
-      name: "Call Leads Pro — Annual",
-      badge: "Best Value",
-      description: "Annual billing for teams that want one predictable renewal.",
-      priceNote: `${formatInr(PRICING_POLICY.annual.basePriceMinor)} for 1 user`,
-      billingFrequency: `+ ${formatInr(PRICING_POLICY.annual.additionalUserPriceMinor)} per additional licensed user, billed annually`,
+      name: "GetCallLead Pro — Annual",
+      badge: "Annual Savings",
+      description: "Annual commitment with effective ₹99/mo for each additional seat.",
+      priceNote: "₹3,499/yr for first user",
+      billingFrequency: "+ ₹1,188/yr per additional user (effective ₹99/mo)",
       features: [
-        "1–25 licensed users",
-        "All Call Leads Pro capabilities",
-        "Purchase required after administrator registration",
-        "Upgrade and downgrade through store subscription controls",
-        "Taxes are determined by the applicable app store",
+        "1–25 licensed users supported",
+        "All GetCallLead Pro capabilities",
+        "Predictable single annual renewal",
+        "Exact savings calculated by seat count",
+        "Taxes determined at store checkout",
       ],
-      ctaLabel: "Download the App",
-      ctaHref: "/download",
+      ctaLabel: "Request a Demo",
+      ctaHref: "/book-demo",
       highlighted: true,
-    },
-    {
-      id: "sales-assisted",
-      name: "Sales-Assisted",
-      description: "For organizations that need rollout guidance or custom commercial terms.",
-      priceNote: "Contact Sales",
-      billingFrequency: "Quoted for the agreed organization scope",
-      features: [
-        "Guided organization setup",
-        "Seat and workflow planning",
-        "Commercial terms documented before purchase",
-        "Tax treatment shown on the applicable invoice",
-      ],
-      ctaLabel: "Contact Sales",
-      ctaHref: "/contact?subject=sales-assisted",
-      highlighted: false,
     },
   ] as PricingPlan[],
   faqs: [
     {
-      question: "What is Call Leads?",
+      question: "What is GetCallLead?",
       answer:
-        "Call Leads is a mobile sales CRM built for teams whose primary sales activity happens over the phone. It turns caller details and phone inquiries into assigned leads with visible next actions and scheduled follow-ups.",
+        "GetCallLead is a sales CRM designed for teams whose primary sales activity happens over the phone. It turns phone inquiries and caller details into assigned leads with scheduled follow-ups and outcome notes.",
     },
     {
-      question: "How does it help with sales calls?",
+      question: "How does GetCallLead handle telephone calls?",
       answer:
-        "Call Leads bridges the gap between phone conversations and CRM updates. You tap to call a lead directly, and immediately record the call outcome, notes, and scheduled callback time so no opportunity is forgotten in a private call log.",
+        "The user taps to initiate calls through their native phone dialler. GetCallLead does not secretly record telephone audio. The rep manually records the outcome, notes, and scheduled next action after the call.",
     },
     {
-      question: "Can leads be assigned to different team members?",
+      question: "How does team assignment work?",
       answer:
-        "Yes. Managers and authorized team members can assign any lead to a specific salesperson. That salesperson receives immediate ownership, and the lead appears in their personal follow-up schedule.",
+        "Organization owners and managers can assign any lead to a specific team member. That representative receives clear ownership and the lead appears in their personal follow-up schedule.",
     },
     {
-      question: "Can I schedule follow-up calls?",
+      question: "How are follow-up reminders scheduled?",
       answer:
-        "Yes. Call Leads includes a dedicated follow-up scheduler and calendar. You can set specific callback dates and times, view tasks categorized as Due Today, Upcoming, or Overdue, and receive timely reminder notifications.",
+        "GetCallLead includes a dedicated follow-up schedule. You choose a specific callback date, time, and purpose, and categorize tasks as Due Today, Upcoming, or Overdue.",
     },
     {
-      question: "Can managers see team activity?",
+      question: "How is customer data separated?",
       answer:
-        "Yes. The management overview displays all organization leads, who owns which account, upcoming callbacks, and overdue actions. This allows managers to identify stalled deals and maintain team accountability.",
+        "Organization-scoped access controls keep customer workspaces separated. Data is transmitted over HTTPS, and access within each workspace is controlled by assigned organization roles.",
     },
     {
-      question: "Is Call Leads available for Android and iPhone?",
+      question: "Do you sell or share customer lead data?",
       answer:
-        "Call Leads is built with Flutter for Android and iOS. The download page displays only verified, publicly available store listings for each platform.",
+        "We do not sell your organization's lead data to advertisers or third parties. Your customer records are used solely to deliver the service to your workspace.",
     },
     {
-      question: "Can I import existing leads?",
+      question: "Is GetCallLead currently available in mobile app stores?",
       answer:
-        "Yes. Call Leads supports importing existing contact lists through standard CSV formats, as well as integrating with device contacts when granted permission.",
-    },
-    {
-      question: "Is my business data shared with other organizations?",
-      answer:
-        "Never. Call Leads enforces strict multi-tenant isolation. Your leads, notes, customer phone numbers, and team activity are completely segregated and encrypted. We do not sell data or share lead info with advertisers or third parties.",
+        "GetCallLead is currently being prepared for public mobile-store release. Request a demo to review the current product workflow with our team.",
     },
     {
       question: "How do I request account deletion?",
       answer:
-        "Use the Account & Data Deletion page at /delete-account to start a request, or contact support. Submission does not by itself confirm identity or complete deletion; verification and status instructions are provided through the registered contact channel.",
+        "Submit a request at /delete-account. Identity verification instructions will be sent to the registered contact channel before account records are purged.",
     },
     {
-      question: "How can I contact support?",
+      question: "How can I contact the GetCallLead team?",
       answer:
-        "Our support team is available at support@getcalllead.io and through the Support Hub at /support. We typically respond within one business day during published operating hours.",
+        "You can reach us by submitting a demo request at /book-demo or emailing support@getcalllead.io.",
     },
   ] as FaqItem[],
 };
-
-export const HAS_LIVE_STORE =
-  SITE_CONFIG.stores.android.enabled || SITE_CONFIG.stores.ios.enabled;
