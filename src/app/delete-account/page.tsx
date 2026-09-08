@@ -96,12 +96,12 @@ export default function DeleteAccountPage() {
         <div className="flex items-center justify-center gap-4 mb-10 text-xs font-semibold">
           <div
             className={`flex items-center gap-2 ${
-              step >= 1 ? "text-[#0E7C7A]" : "text-slate-400"
+              step >= 1 ? "text-[#0E7C7A]" : "text-slate-600"
             }`}
           >
             <span
               className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                step >= 1 ? "bg-[#0E7C7A] text-white" : "bg-slate-200 text-slate-600"
+                step >= 1 ? "bg-[#0E7C7A] text-white" : "bg-slate-200 text-slate-700"
               }`}
             >
               1
@@ -111,12 +111,12 @@ export default function DeleteAccountPage() {
           <div className="h-0.5 w-8 bg-slate-200" />
           <div
             className={`flex items-center gap-2 ${
-              step >= 2 ? "text-[#0E7C7A]" : "text-slate-400"
+              step >= 2 ? "text-[#0E7C7A]" : "text-slate-600"
             }`}
           >
             <span
               className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                step >= 2 ? "bg-[#0E7C7A] text-white" : "bg-slate-200 text-slate-600"
+                step >= 2 ? "bg-[#0E7C7A] text-white" : "bg-slate-200 text-slate-700"
               }`}
             >
               2
@@ -126,7 +126,7 @@ export default function DeleteAccountPage() {
           <div className="h-0.5 w-8 bg-slate-200" />
           <div
             className={`flex items-center gap-2 ${
-              step === 3 ? "text-emerald-600" : "text-slate-400"
+              step === 3 ? "text-emerald-600" : "text-slate-600"
             }`}
           >
             <span

@@ -60,7 +60,7 @@ export function HowItWorksSection() {
                 </div>
 
                 {/* Sub-label */}
-                <div className="mt-8 pt-4 border-t border-slate-200/60 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                <div className="mt-8 pt-4 border-t border-slate-200/60 text-[11px] font-semibold text-slate-600 uppercase tracking-wider">
                   Phase {item.stepNumber} of 03
                 </div>
               </div>

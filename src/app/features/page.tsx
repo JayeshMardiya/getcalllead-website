@@ -145,7 +145,7 @@ export default function FeaturesPage() {
                 </div>
 
                 <div className="mt-6 rounded-2xl bg-slate-50 border border-slate-100 p-4">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
                     Why it matters
                   </span>
                   <p className="mt-1 text-xs font-semibold text-slate-800 leading-relaxed">

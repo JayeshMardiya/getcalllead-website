@@ -69,7 +69,7 @@ export function CookieBanner() {
         <button
           onClick={handleDecline}
           aria-label="Close cookie banner"
-          className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+          className="rounded-lg p-1 text-slate-600 hover:bg-slate-100 hover:text-slate-800"
         >
           <X className="h-4 w-4" />
         </button>

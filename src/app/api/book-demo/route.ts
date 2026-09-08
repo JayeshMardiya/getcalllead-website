@@ -1,11 +1,30 @@
-import { createHash, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceHmacHeaders } from "@/lib/server-hmac";
+import { resolveVisitorIp, computeVisitorIpHmac } from "@/lib/visitor-ip";
 
 const MAX_BODY_BYTES = 16 * 1024;
 const RATE_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_PER_IP = 15;
 const ipSubmissionCounters = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(visitorIpHmac: string): boolean {
+  const now = Date.now();
+  const current = ipSubmissionCounters.get(visitorIpHmac);
+
+  if (!current || current.resetAt <= now) {
+    if (ipSubmissionCounters.size > 10_000) {
+      for (const [key, val] of ipSubmissionCounters.entries()) {
+        if (val.resetAt <= now) ipSubmissionCounters.delete(key);
+      }
+    }
+    ipSubmissionCounters.set(visitorIpHmac, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    return false;
+  }
+
+  current.count += 1;
+  return current.count > RATE_LIMIT_PER_IP;
+}
 
 interface PublicDemoSubmission {
   fullName: string;
@@ -28,35 +47,6 @@ interface PublicDemoSubmission {
   inquiryType?: "DEMO_REQUEST" | "CONTACT_REQUEST";
 }
 
-function getClientHmacIp(request: NextRequest): string {
-  const secret = process.env.RATE_LIMIT_SALT || "rate-limit-salt-v1";
-  const rawIp =
-    request.headers.get("cf-connecting-ip") ||
-    request.headers.get("x-real-ip") ||
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    "127.0.0.1";
-  return createHash("sha256").update(`${secret}:${rawIp}`).digest("hex");
-}
-
-function checkRateLimit(request: NextRequest): boolean {
-  const now = Date.now();
-  const ipHash = getClientHmacIp(request);
-  const current = ipSubmissionCounters.get(ipHash);
-
-  if (!current || current.resetAt <= now) {
-    if (ipSubmissionCounters.size > 10_000) {
-      for (const [key, val] of ipSubmissionCounters.entries()) {
-        if (val.resetAt <= now) ipSubmissionCounters.delete(key);
-      }
-    }
-    ipSubmissionCounters.set(ipHash, { count: 1, resetAt: now + RATE_WINDOW_MS });
-    return false;
-  }
-
-  current.count += 1;
-  return current.count > RATE_LIMIT_PER_IP;
-}
-
 export async function POST(request: NextRequest) {
   try {
     const contentType = request.headers.get("content-type")?.toLowerCase() || "";
@@ -67,7 +57,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (checkRateLimit(request)) {
+    const visitorIp = resolveVisitorIp(request);
+    const visitorIpHmac = computeVisitorIpHmac(visitorIp);
+
+    if (checkRateLimit(visitorIpHmac)) {
       return NextResponse.json(
         { error: "Too many requests from this network. Please try again shortly or contact support@getcalllead.io." },
         { status: 429 },
@@ -173,13 +166,13 @@ export async function POST(request: NextRequest) {
       "POST",
       "/api/v1/integrations/website/inquiries",
       payloadJson,
+      visitorIpHmac,
     );
 
     const backendResponse = await fetch(`${backendUrl}/api/v1/integrations/website/inquiries`, {
       method: "POST",
       headers: {
         ...hmacHeaders,
-        "x-forwarded-for": request.headers.get("x-forwarded-for") || "127.0.0.1",
       },
       body: payloadJson,
       cache: "no-store",

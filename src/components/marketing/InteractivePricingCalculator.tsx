@@ -59,12 +59,12 @@ export function InteractivePricingCalculator() {
             onClick={() => setBillingCycle("YEARLY")}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-xs font-semibold transition sm:text-sm ${
               billingCycle === "YEARLY"
-                ? "bg-emerald-600 text-white shadow-sm"
+                ? "bg-emerald-700 text-white shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
             <span>Annual</span>
-            <span className="rounded-md bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-bold tracking-tight text-white">
+            <span className="rounded-md bg-emerald-950/40 px-1.5 py-0.5 text-[10px] font-bold tracking-tight text-emerald-100">
               Save {quote.annualDiscountPercent}%
             </span>
           </button>
@@ -78,7 +78,7 @@ export function InteractivePricingCalculator() {
             <Users className="h-4 w-4 text-emerald-600" />
             Licensed Users: <span className="text-lg font-extrabold text-emerald-700">{seats}</span>
           </label>
-          <span className="text-xs text-slate-400">Range: 1 to 25 seats</span>
+          <span className="text-xs text-slate-600 font-medium">Range: 1 to 25 seats</span>
         </div>
 
         <div className="mt-4 flex items-center gap-4">
@@ -199,15 +199,15 @@ export function InteractivePricingCalculator() {
             <Check className="h-4 w-4 text-emerald-600" />
             <span>Role-based workspace security for up to {seats} licensed users</span>
           </div>
-          <div className="flex items-center gap-2 text-slate-500">
-            <Info className="h-4 w-4 text-slate-400" />
+          <div className="flex items-center gap-2 text-slate-600">
+            <Info className="h-4 w-4 text-slate-500" />
             <span>Published India list price. Store checkout is authoritative for final localized tax &amp; renewal.</span>
           </div>
         </div>
 
         <Link
           href={`/book-demo?seats=${seats}&cycle=${billingCycle.toLowerCase()}`}
-          className="w-full shrink-0 rounded-xl bg-emerald-600 px-8 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 sm:w-auto"
+          className="w-full shrink-0 rounded-xl bg-emerald-700 px-8 py-3.5 text-center text-sm font-semibold text-white transition hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 sm:w-auto"
         >
           Request a Demo for {seats} {seats === 1 ? "User" : "Users"}
         </Link>

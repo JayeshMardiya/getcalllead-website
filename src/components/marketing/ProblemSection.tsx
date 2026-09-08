@@ -29,7 +29,7 @@ export function ProblemSection() {
     <section className="relative py-20 sm:py-28 bg-[#F8FAFC]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-wider text-rose-600 bg-rose-50 border border-rose-200/80 px-3 py-1 rounded-full">
+          <span className="text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-50 border border-rose-200/80 px-3 py-1 rounded-full">
             The Phone Sales Reality
           </span>
           <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-950">
@@ -54,7 +54,7 @@ export function ProblemSection() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="mt-4">
-                  <span className="text-xs font-mono font-semibold text-rose-500">0{idx + 1} — FAILURE</span>
+                  <span className="text-xs font-mono font-semibold text-rose-700">0{idx + 1} — FAILURE</span>
                   <h3 className="mt-1 text-base font-bold text-slate-900 leading-snug">
                     {item.title}
                   </h3>

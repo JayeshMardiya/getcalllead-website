@@ -30,7 +30,7 @@ export function ConceptualWorkflowCard() {
           <div className="flex-1">
             <div className="flex items-center justify-between">
               <p className="text-xs font-bold text-slate-900">Native Phone Interaction</p>
-              <span className="text-[10px] font-medium text-emerald-600">Dialler</span>
+              <span className="text-[10px] font-semibold text-emerald-800">Dialler</span>
             </div>
             <p className="mt-1 text-[11px] leading-relaxed text-slate-600">
               Reps initiate calls using the phone dialler. Contact details are saved directly into your workspace.
@@ -46,7 +46,7 @@ export function ConceptualWorkflowCard() {
           <div className="flex-1">
             <div className="flex items-center justify-between">
               <p className="text-xs font-bold text-slate-900">Team Assignment</p>
-              <span className="text-[10px] font-medium text-emerald-600">Role-Scoped</span>
+              <span className="text-[10px] font-semibold text-emerald-800">Role-Scoped</span>
             </div>
             <p className="mt-1 text-[11px] leading-relaxed text-slate-600">
               Owners and managers assign lead ownership to designated sales reps with zero ambiguity.

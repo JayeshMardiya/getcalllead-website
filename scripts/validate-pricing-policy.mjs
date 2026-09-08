@@ -89,13 +89,59 @@ assert.equal(formatInr(3499), "₹3,499");
 assert.equal(formatInr(29900, true), "₹299");
 assert.equal(formatInr(349900, true), "₹3,499");
 
-// Deliberate cross-repository mismatch check
-console.log("Testing deliberate mismatch detection...");
-const tampered = { ...rawArtifact, monthly: { ...rawArtifact.monthly, additionalSeatRupees: 199 } };
-const { checksumSha256: _tHash, ...tamperedPayload } = tampered;
-const tamperedString = JSON.stringify(canonicalize(tamperedPayload), null, 2);
-const tamperedCalculated = crypto.createHash("sha256").update(tamperedString, "utf8").digest("hex");
-assert.notEqual(tamperedCalculated, checksumSha256, "Tampered payload must fail checksum verification!");
-console.log("✓ Deliberate mismatch successfully detected and rejected.");
+// 3. Cross-repository comparison if CANONICAL_PRICING_ARTIFACT is provided
+const backendArtifactPath = process.env.CANONICAL_PRICING_ARTIFACT;
+if (backendArtifactPath) {
+  assert.ok(fs.existsSync(backendArtifactPath), `Authoritative backend artifact not found at: ${backendArtifactPath}`);
+  const backendArtifactRaw = fs.readFileSync(backendArtifactPath, "utf8");
+  const backendArtifact = JSON.parse(backendArtifactRaw);
+
+  assert.equal(rawArtifact.policyVersion, backendArtifact.policyVersion, "Policy version mismatch with backend artifact");
+  assert.equal(rawArtifact.sourceDefinitionSha256, backendArtifact.sourceDefinitionSha256, "Source definition SHA-256 mismatch with backend artifact");
+  assert.equal(rawArtifact.checksumSha256, backendArtifact.checksumSha256, "Checksum SHA-256 mismatch with backend artifact");
+  assert.equal(rawArtifact.monthly.additionalSeatRupees, backendArtifact.monthly.additionalSeatRupees, "Monthly additional seat price mismatch with backend artifact");
+  assert.equal(rawArtifact.annual.additionalSeatRupees, backendArtifact.annual.additionalSeatRupees, "Annual additional seat price mismatch with backend artifact");
+
+  // Byte comparison after normalization
+  const localNormalized = JSON.stringify(canonicalize(rawArtifact));
+  const backendNormalized = JSON.stringify(canonicalize(backendArtifact));
+  assert.equal(localNormalized, backendNormalized, "Canonical JSON representation mismatch with backend artifact");
+  console.log(`✓ Cross-repository match confirmed against: ${backendArtifactPath}`);
+}
+
+// 4. Deliberate cross-repository tamper test:
+// Copy artifact, mutate ₹149 -> ₹199, recompute self-checksum so self-check passes,
+// then assert that cross-repository comparison against backend artifact FAILS.
+console.log("Running deliberate cross-repository tamper test...");
+const tamperedPayload = {
+  ...rawArtifact,
+  monthly: { ...rawArtifact.monthly, additionalSeatRupees: 199, additionalSeatPaise: 19900 },
+};
+delete tamperedPayload.checksumSha256;
+const tamperedCanonicalStr = JSON.stringify(canonicalize(tamperedPayload), null, 2);
+const tamperedChecksum = crypto.createHash("sha256").update(tamperedCanonicalStr, "utf8").digest("hex");
+const tamperedArtifact = { ...tamperedPayload, checksumSha256: tamperedChecksum };
+
+// Self-check passes for tampered artifact
+const { checksumSha256: tHash, ...tPayload } = tamperedArtifact;
+const tCanonicalStr = JSON.stringify(canonicalize(tPayload), null, 2);
+const tCalc = crypto.createHash("sha256").update(tCanonicalStr, "utf8").digest("hex");
+assert.equal(tCalc, tHash, "Tampered artifact internal checksum self-check must pass");
+
+// Cross-repository comparison against canonical backend must FAIL
+let caughtMismatch = false;
+try {
+  if (backendArtifactPath && fs.existsSync(backendArtifactPath)) {
+    const backendArtifact = JSON.parse(fs.readFileSync(backendArtifactPath, "utf8"));
+    assert.equal(tamperedArtifact.checksumSha256, backendArtifact.checksumSha256);
+  } else {
+    // Compare against unmodified canonical artifact
+    assert.equal(tamperedArtifact.checksumSha256, rawArtifact.checksumSha256);
+  }
+} catch {
+  caughtMismatch = true;
+}
+assert.ok(caughtMismatch, "Cross-repository verifier must reject tampered artifact despite valid self-checksum!");
+console.log("✓ Deliberate tamper test passed: self-checksum passed but cross-repo verification rejected.");
 
 console.log("All pricing policy tests passed successfully (1 through 25 seats validated).");

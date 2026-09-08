@@ -42,7 +42,6 @@ export function Header() {
         <Link
           href="/"
           className="group flex items-center gap-2.5 focus-visible:outline-none"
-          aria-label="GetCallLead Home"
         >
           <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#0E7C7A] to-[#0A5D5B] text-white shadow-sm ring-1 ring-black/5 group-hover:scale-[1.02] transition-transform">
             <PhoneCall className="h-5 w-5 text-white" />

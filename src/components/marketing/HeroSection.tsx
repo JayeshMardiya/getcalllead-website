@@ -40,7 +40,7 @@ export function HeroSection() {
                 href="/book-demo"
                 variant="primary"
                 size="lg"
-                className="w-full sm:w-auto shadow-md hover:shadow-lg bg-emerald-600 hover:bg-emerald-500 text-white"
+                className="w-full sm:w-auto shadow-md hover:shadow-lg bg-emerald-700 hover:bg-emerald-800 text-white"
               >
                 <span>Request a Demo</span>
                 <ArrowRight className="h-4 w-4 ml-1" />

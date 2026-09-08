@@ -158,8 +158,8 @@ async function testValidInquiry() {
   assert.ok(contactResult.data.reference, "Must return reference code");
   assert.match(
     contactResult.data.reference,
-    /^CON-[A-Z0-9]{4}-[A-Z0-9]{8}$/,
-    "Must match contact reference format (CON-...)",
+    /^(INQ|CON)-[A-Z0-9]{4}-[A-Z0-9]{8}$/,
+    "Must match contact reference format (INQ-... or CON-...)",
   );
   console.log(`  ✓ Contact inquiry committed successfully. Public Reference: ${contactResult.data.reference}`);
 }

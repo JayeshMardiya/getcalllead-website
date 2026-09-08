@@ -1,6 +1,7 @@
-import { createHash, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceHmacHeaders } from "@/lib/server-hmac";
+import { resolveVisitorIp, computeVisitorIpHmac } from "@/lib/visitor-ip";
 
 const MAX_BODY_BYTES = 16 * 1024;
 const RATE_WINDOW_MS = 15 * 60 * 1000;
@@ -26,20 +27,9 @@ interface PublicContactSubmission {
   honeypot?: string;
 }
 
-function getClientHmacIp(request: NextRequest): string {
-  const secret = process.env.RATE_LIMIT_SALT || "rate-limit-salt-v1";
-  const rawIp =
-    request.headers.get("cf-connecting-ip") ||
-    request.headers.get("x-real-ip") ||
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    "127.0.0.1";
-  return createHash("sha256").update(`${secret}:${rawIp}`).digest("hex");
-}
-
-function checkRateLimit(request: NextRequest): boolean {
+function checkRateLimit(visitorIpHmac: string): boolean {
   const now = Date.now();
-  const ipHash = getClientHmacIp(request);
-  const current = ipSubmissionCounters.get(ipHash);
+  const current = ipSubmissionCounters.get(visitorIpHmac);
 
   if (!current || current.resetAt <= now) {
     if (ipSubmissionCounters.size > 10_000) {
@@ -47,7 +37,7 @@ function checkRateLimit(request: NextRequest): boolean {
         if (val.resetAt <= now) ipSubmissionCounters.delete(key);
       }
     }
-    ipSubmissionCounters.set(ipHash, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    ipSubmissionCounters.set(visitorIpHmac, { count: 1, resetAt: now + RATE_WINDOW_MS });
     return false;
   }
 
@@ -65,7 +55,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (checkRateLimit(request)) {
+    const visitorIp = resolveVisitorIp(request);
+    const visitorIpHmac = computeVisitorIpHmac(visitorIp);
+
+    if (checkRateLimit(visitorIpHmac)) {
       return NextResponse.json(
         { error: "Too many contact requests from this connection. Please retry later." },
         { status: 429 },
@@ -130,6 +123,7 @@ export async function POST(request: NextRequest) {
       "POST",
       "/api/v1/integrations/website/inquiries",
       backendPayloadString,
+      visitorIpHmac,
     );
 
     const backendResponse = await fetch(
@@ -138,7 +132,6 @@ export async function POST(request: NextRequest) {
         method: "POST",
         headers: {
           ...hmacHeaders,
-          "x-forwarded-for": request.headers.get("x-forwarded-for") || "127.0.0.1",
         },
         body: backendPayloadString,
         signal: AbortSignal.timeout(8000),

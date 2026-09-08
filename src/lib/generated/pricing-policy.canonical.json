@@ -2,6 +2,7 @@
   "$schema": "https://getcalllead.io/schemas/pricing-policy.v3.json",
   "policyVersion": 3,
   "effectiveAt": "2026-09-07T00:00:00.000Z",
+  "sourceDefinitionSha256": "4ec68ef445d830e80784b1b58ddd5e4a4c3fb13349210aab658decdc07a91267",
   "currency": "INR",
   "country": "IN",
   "minimumSeats": 1,
@@ -273,5 +274,5 @@
       "annualEquivalentMonthlyRupees": 2668
     }
   ],
-  "checksumSha256": "34ae9c486d558880a7701bd313fc29428d5465329bb4dcf363a9afb7cea8bad1"
+  "checksumSha256": "ac2dfc0c7513e42e252318b3360b92a99cec1a8b769f104da4cec5d9aa920e1f"
 }

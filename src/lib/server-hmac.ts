@@ -4,6 +4,7 @@ export interface HmacHeaders {
   "x-getcalllead-key-id": string;
   "x-getcalllead-timestamp": string;
   "x-getcalllead-nonce": string;
+  "x-getcalllead-visitor-ip-hmac": string;
   "x-getcalllead-signature": string;
   "Content-Type": string;
 }
@@ -12,23 +13,30 @@ export function createServiceHmacHeaders(
   method: string,
   canonicalPath: string,
   bodyString: string,
+  visitorIpHmac: string = createHash("sha256").update("127.0.0.1").digest("hex"),
   keyId = "website-v1",
 ): HmacHeaders {
-  const secret =
-    process.env.WEBSITE_HMAC_SECRET ||
-    process.env.JWT_SECRET ||
-    "getcalllead-local-development-secret";
+  const isProd = process.env.NODE_ENV === "production" || (process.env.NODE_ENV as string) === "staging" || process.env.APP_ENV === "staging";
+  const secret = process.env.WEBSITE_HMAC_SECRET || (!isProd ? process.env.JWT_SECRET || "getcalllead-local-development-secret" : "");
+
+  if (!secret || secret.trim().length < 16) {
+    if (isProd) {
+      throw new Error("WEBSITE_HMAC_SECRET is required and must be at least 16 characters in production/staging.");
+    }
+    throw new Error("WEBSITE_HMAC_SECRET is not configured.");
+  }
 
   const timestamp = Date.now().toString();
   const nonce = randomUUID();
   const bodyHash = createHash("sha256").update(bodyString, "utf8").digest("hex");
-  const signPayload = `${method.toUpperCase()}\n${canonicalPath}\n${timestamp}\n${nonce}\n${bodyHash}`;
+  const signPayload = `${method.toUpperCase()}\n${canonicalPath}\n${timestamp}\n${nonce}\n${visitorIpHmac}\n${bodyHash}`;
   const signature = createHmac("sha256", secret).update(signPayload, "utf8").digest("hex");
 
   return {
     "x-getcalllead-key-id": keyId,
     "x-getcalllead-timestamp": timestamp,
     "x-getcalllead-nonce": nonce,
+    "x-getcalllead-visitor-ip-hmac": visitorIpHmac,
     "x-getcalllead-signature": signature,
     "Content-Type": "application/json",
   };

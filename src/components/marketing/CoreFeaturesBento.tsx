@@ -40,7 +40,7 @@ export function CoreFeaturesBento() {
                 <div>
                   <div className="flex items-center justify-between">
                     <Badge variant="teal">{card.badge}</Badge>
-                    <span className="text-xs font-semibold text-slate-400">
+                    <span className="text-xs font-semibold text-slate-600">
                       {card.tagline}
                     </span>
                   </div>

@@ -37,7 +37,7 @@ export function FinalCtaSection() {
             href="/book-demo"
             variant="primary"
             size="lg"
-            className="w-full sm:w-auto shadow-lg shadow-emerald-900/40 bg-emerald-600 hover:bg-emerald-500 text-white"
+            className="w-full sm:w-auto shadow-lg shadow-emerald-950/40 bg-emerald-700 hover:bg-emerald-800 text-white"
           >
             <span>Request a Demo</span>
             <ArrowRight className="h-4 w-4 ml-1" />
@@ -52,7 +52,7 @@ export function FinalCtaSection() {
           </Button>
         </div>
 
-        <div className="mt-8 flex items-center justify-center gap-2 text-xs text-slate-400">
+        <div className="mt-8 flex items-center justify-center gap-2 text-xs text-slate-300">
           <ShieldCheck className="h-4 w-4 text-emerald-400" />
           <span>Organization-scoped access controls • Data transmitted over HTTPS</span>
         </div>
