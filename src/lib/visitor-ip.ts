@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { isIP } from "node:net";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
 export const TRUSTED_VISITOR_IP_HEADER = "x-getcalllead-trusted-client-ip";
 export const TRUSTED_PROXY_AUTH_HEADER = "x-getcalllead-proxy-auth";
@@ -53,10 +53,26 @@ export function normalizeIp(rawIp: string): string {
   return ip;
 }
 
+function resolveForwardedIp(request: NextRequest): string | null {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    // Traefik appends the direct peer to the right of any client-supplied values.
+    // Using the rightmost valid address prevents a forged leftmost XFF value from
+    // bypassing per-IP rate limits.
+    const candidates = forwardedFor.split(",").map((value) => normalizeIp(value));
+    for (let index = candidates.length - 1; index >= 0; index -= 1) {
+      if (candidates[index] !== "unknown") return candidates[index];
+    }
+  }
+
+  const realIp = request.headers.get("x-real-ip");
+  return realIp ? normalizeIp(realIp) : null;
+}
+
 /**
  * Resolves visitor IP strictly according to proxy architecture.
- * Browser-supplied headers (x-forwarded-for, x-real-ip) are untrusted and must NOT be used
- * as authenticated client IP when behind our trusted Apache reverse proxy.
+ * Production proxy headers are accepted only when the reverse proxy has overwritten
+ * the authentication header with the shared proxy secret.
  */
 export function resolveVisitorIp(request: NextRequest): string {
   const isProd = process.env.NODE_ENV === "production" || (process.env.NODE_ENV as string) === "staging";
@@ -65,13 +81,11 @@ export function resolveVisitorIp(request: NextRequest): string {
   const trustedHeaderIp = request.headers.get(TRUSTED_VISITOR_IP_HEADER);
   const proxyAuth = request.headers.get(TRUSTED_PROXY_AUTH_HEADER);
   const proxySecret = process.env.TRUSTED_PROXY_HEADER_SECRET || "";
-  if (
-    trustedHeaderIp &&
-    proxyAuth &&
-    proxySecret.length >= 32 &&
-    secretsMatch(proxyAuth, proxySecret)
-  ) {
-    return normalizeIp(trustedHeaderIp);
+  if (proxyAuth && proxySecret.length >= 32 && secretsMatch(proxyAuth, proxySecret)) {
+    const authenticatedIp = trustedHeaderIp
+      ? normalizeIp(trustedHeaderIp)
+      : resolveForwardedIp(request);
+    if (authenticatedIp && authenticatedIp !== "unknown") return authenticatedIp;
   }
 
   if (isProd) {

@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PRICING_POLICY, calculatePricingQuote, formatInr } from "../src/lib/pricing-policy.ts";
 import { createServiceHmacHeaders } from "../src/lib/server-hmac.ts";
+import { resolveVisitorIp } from "../src/lib/visitor-ip.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -78,6 +79,39 @@ else process.env.WEBSITE_KEY_ID = previousKeyId;
 if (previousHmacSecret === undefined) delete process.env.WEBSITE_HMAC_SECRET;
 else process.env.WEBSITE_HMAC_SECRET = previousHmacSecret;
 console.log("  ✓ Server-to-server HMAC signing generated valid 64-char hex digest.");
+
+// ----------------------------------------------------
+// 2b. Authenticated Reverse-Proxy IP Resolution
+// ----------------------------------------------------
+console.log("\n[2b] Authenticated Reverse-Proxy IP Resolution");
+const previousNodeEnv = process.env.NODE_ENV;
+const previousProxySecret = process.env.TRUSTED_PROXY_HEADER_SECRET;
+const proxySecret = "proxy-test-secret-at-least-32-characters";
+process.env.NODE_ENV = "production";
+process.env.TRUSTED_PROXY_HEADER_SECRET = proxySecret;
+
+const proxiedRequest = {
+  headers: new Headers({
+    "x-getcalllead-proxy-auth": proxySecret,
+    "x-forwarded-for": "198.51.100.200, 203.0.113.42",
+  }),
+};
+assert.equal(
+  resolveVisitorIp(proxiedRequest),
+  "203.0.113.42",
+  "Use Traefik-appended rightmost XFF address instead of a spoofable leftmost value",
+);
+assert.throws(
+  () => resolveVisitorIp({ headers: new Headers({ "x-forwarded-for": "198.51.100.200" }) }),
+  /Authenticated trusted-proxy client IP headers are required/,
+  "Reject unauthenticated forwarded headers in production",
+);
+
+if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+else process.env.NODE_ENV = previousNodeEnv;
+if (previousProxySecret === undefined) delete process.env.TRUSTED_PROXY_HEADER_SECRET;
+else process.env.TRUSTED_PROXY_HEADER_SECRET = previousProxySecret;
+console.log("  ✓ Proxy-authenticated XFF accepted; unauthenticated and spoofed-leftmost values rejected.");
 
 // ----------------------------------------------------
 // 3. Public-Content Negative Oracles
