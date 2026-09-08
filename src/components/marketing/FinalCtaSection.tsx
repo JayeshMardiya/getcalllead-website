@@ -34,27 +34,27 @@ export function FinalCtaSection() {
         {/* Buttons */}
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Button
-            href={HAS_LIVE_STORE ? "/download" : "/book-demo"}
+            href="/book-demo"
             variant="primary"
             size="lg"
-            className="w-full sm:w-auto shadow-lg shadow-teal-900/40"
+            className="w-full sm:w-auto shadow-lg shadow-emerald-950/40 bg-emerald-700 hover:bg-emerald-800 text-white"
           >
-            <span>{primaryCta}</span>
+            <span>Request a Demo</span>
             <ArrowRight className="h-4 w-4 ml-1" />
           </Button>
           <Button
-            href={HAS_LIVE_STORE ? "/book-demo" : "/support"}
+            href="/support"
             variant="secondary"
             size="lg"
             className="w-full sm:w-auto bg-slate-900 text-white border-slate-700 hover:bg-slate-800"
           >
-            {HAS_LIVE_STORE ? "Book a Demo" : "Contact Support"}
+            Contact Support
           </Button>
         </div>
 
-        <div className="mt-8 flex items-center justify-center gap-2 text-xs text-slate-400">
+        <div className="mt-8 flex items-center justify-center gap-2 text-xs text-slate-300">
           <ShieldCheck className="h-4 w-4 text-emerald-400" />
-          <span>Store purchases use verified listings • Organization data remains isolated</span>
+          <span>Organization-scoped access controls • Data transmitted over HTTPS</span>
         </div>
       </div>
     </section>

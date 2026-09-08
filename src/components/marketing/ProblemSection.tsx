@@ -29,7 +29,7 @@ export function ProblemSection() {
     <section className="relative py-20 sm:py-28 bg-[#F8FAFC]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto">
-          <span className="text-xs font-bold uppercase tracking-wider text-rose-600 bg-rose-50 border border-rose-200/80 px-3 py-1 rounded-full">
+          <span className="text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-50 border border-rose-200/80 px-3 py-1 rounded-full">
             The Phone Sales Reality
           </span>
           <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-950">
@@ -54,7 +54,7 @@ export function ProblemSection() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="mt-4">
-                  <span className="text-xs font-mono font-semibold text-rose-500">0{idx + 1} — FAILURE</span>
+                  <span className="text-xs font-mono font-semibold text-rose-700">0{idx + 1} — FAILURE</span>
                   <h3 className="mt-1 text-base font-bold text-slate-900 leading-snug">
                     {item.title}
                   </h3>
@@ -67,14 +67,14 @@ export function ProblemSection() {
           })}
         </div>
 
-        {/* The Call Leads Resolution Banner */}
-        <div className="mt-12 rounded-3xl border border-teal-200 bg-gradient-to-r from-teal-50/90 via-teal-100/40 to-emerald-50/90 p-6 sm:p-8 text-center max-w-4xl mx-auto shadow-sm">
-          <div className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0E7C7A]">
-            <CheckCircle2 className="h-4 w-4" />
-            <span>The Call Leads Solution</span>
+        {/* The GetCallLead Resolution Banner */}
+        <div className="mt-12 rounded-3xl border border-emerald-200 bg-gradient-to-r from-emerald-50/90 via-emerald-100/40 to-teal-50/90 p-6 sm:p-8 text-center max-w-4xl mx-auto shadow-sm">
+          <div className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-800">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+            <span>The GetCallLead Solution</span>
           </div>
           <p className="mt-3 text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            Call Leads turns every conversation into assigned, trackable sales work.
+            GetCallLead turns every phone interaction into assigned, trackable sales work.
           </p>
           <p className="mt-2 text-sm text-slate-600 max-w-2xl mx-auto">
             From the minute a call ends, your salesperson has an assigned account, a scheduled follow-up agenda, and visible pipeline movement.

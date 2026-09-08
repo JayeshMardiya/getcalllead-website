@@ -1,145 +1,170 @@
 import React from "react";
-import Image from "next/image";
 import { Metadata } from "next";
+import Link from "next/link";
 import { SITE_CONFIG } from "@/lib/site-config";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import {
-  PhoneCall,
+  UserPlus,
+  Kanban,
   Calendar,
-  UsersRound,
-  History,
-  TrendingUp,
-  ShieldCheck,
+  Users,
   CheckCircle2,
   XCircle,
   ArrowRight,
+  ShieldCheck,
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Features & Workflow",
+  title: "Features & Workflow | GetCallLead",
   description:
-    "Explore Call Leads' mobile-first CRM features: lead capture from calls, stage pipelines, follow-up scheduling, team assignment, and manager visibility.",
+    "Explore GetCallLead's mobile-first sales CRM capabilities: structured lead intake, stage pipelines, follow-up scheduling, and team assignment.",
+  alternates: {
+    canonical: "/features",
+  },
 };
 
-export default function FeaturesPage() {
-  const comparisonItems = [
-    {
-      capability: "Lead Information Storage",
-      traditional: "Trapped in individual rep's personal phone dialler",
-      callLeads: "Instantly saved into team's centralized mobile CRM",
-    },
-    {
-      capability: "Lead Ownership & Assignment",
-      traditional: "Unclear; leads get duplicated or forgotten",
-      callLeads: "Definite single-tap assignment to designated salesperson",
-    },
-    {
-      capability: "Follow-up Reminders",
-      traditional: "Dependent on handwritten notes or memory",
-      callLeads: "Calendar-synchronized notifications with Due Today/Overdue tags",
-    },
-    {
-      capability: "Call Outcome Logging",
-      traditional: "No record of conversation or next required action",
-      callLeads: "Instant post-call outcome tags and timestamped history",
-    },
-    {
-      capability: "Manager Oversight",
-      traditional: "Blind until end-of-month missed revenue surprises",
-      callLeads: "Live roster visibility into pending callbacks and deal velocity",
-    },
-    {
-      capability: "Data Isolation & Security",
-      traditional: "Risk of contact loss when reps change devices",
-      callLeads: "Encrypted multi-tenant cloud storage with role security",
-    },
-  ];
+const featureDetails = [
+  {
+    id: "intake",
+    icon: UserPlus,
+    badge: "Intake",
+    title: "Structured Lead Intake from Phone Conversations",
+    description:
+      "When phone inquiries arrive, capture caller name, mobile number, company name, and discussion notes in structured CRM records immediately on your phone.",
+    benefit:
+      "Prevents important caller numbers and interaction context from disappearing in private device call logs.",
+  },
+  {
+    id: "pipeline",
+    icon: Kanban,
+    badge: "Pipeline",
+    title: "Visual Deal Stages & Status Tracking",
+    description:
+      "Move deals through defined progression stages: New, Qualified, Proposal Sent, and Converted. Keep reps focused on active prospects.",
+    benefit:
+      "Gives reps and managers immediate clarity on deal momentum across every account in the organization.",
+  },
+  {
+    id: "schedule",
+    icon: Calendar,
+    badge: "Scheduling",
+    title: "Follow-Up Agenda & Callback Commitments",
+    description:
+      "Never end a call without locking in the next action. Set callback dates, exact times, and specific discussion objectives.",
+    benefit:
+      "Daily task views group callbacks into Due Today, Upcoming, and Overdue so reps execute commitments reliably.",
+  },
+  {
+    id: "assignment",
+    icon: Users,
+    badge: "Team",
+    title: "Team Assignment & Clear Ownership",
+    description:
+      "Assign every lead to an authorized sales representative. Maintain strict accountability without duplicate calling.",
+    benefit:
+      "Salespeople know exactly which accounts they own, while managers review team-wide distribution from one dashboard.",
+  },
+];
 
+const comparisonItems = [
+  {
+    capability: "Lead Contact Storage",
+    traditional: "Trapped in individual rep's personal phone dialler",
+    getCallLead: "Saved directly into your organization workspace",
+  },
+  {
+    capability: "Lead Ownership & Assignment",
+    traditional: "Unclear ownership; duplicate outreach or forgotten prospects",
+    getCallLead: "Unambiguous assignment to a designated sales rep",
+  },
+  {
+    capability: "Follow-up Reminders",
+    traditional: "Dependent on personal notes or memory",
+    getCallLead: "Structured callback schedule with Due Today and Overdue filters",
+  },
+  {
+    capability: "Call Outcome Recording",
+    traditional: "No record of discussion notes or agreed next action",
+    getCallLead: "Manual outcome notes and timestamped activity history",
+  },
+  {
+    capability: "Manager Visibility",
+    traditional: "No insight until end-of-month revenue gaps occur",
+    getCallLead: "Operational overview of pending follow-ups and team activity",
+  },
+  {
+    capability: "Data Protection & Access",
+    traditional: "Risk of complete customer loss when reps leave",
+    getCallLead: "Organization-scoped workspace security with role permissions",
+  },
+];
+
+export default function FeaturesPage() {
   return (
-    <div className="py-12 sm:py-20">
-      {/* Hero Header */}
+    <div className="py-12 sm:py-20 bg-[#F8FAFC]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <div className="text-center max-w-3xl mx-auto">
           <Badge variant="teal" size="md">
             Product Capabilities
           </Badge>
           <h1 className="mt-4 text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-950">
-            Mobile-first CRM built around every sales conversation.
+            CRM built around every sales call.
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-slate-600">
-            Engineered for sales teams whose revenue depends on phone interactions. Every feature eliminates friction between making a call and closing a deal.
+          <p className="mt-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+            GetCallLead connects phone conversations directly to structured sales workflow. Capture leads, assign ownership, schedule follow-ups, and keep reps accountable.
           </p>
         </div>
 
-        {/* Deep Dive Features */}
-        <div className="mt-20 space-y-24">
-          {SITE_CONFIG.features.map((feature, idx) => {
-            const isReversed = idx % 2 === 1;
+        {/* Feature Cards Grid */}
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {featureDetails.map((feat) => {
+            const Icon = feat.icon;
             return (
               <div
-                key={feature.id}
-                className={`grid grid-cols-1 lg:grid-cols-12 gap-12 items-center ${
-                  isReversed ? "lg:flex-row-reverse" : ""
-                }`}
+                key={feat.id}
+                className="flex flex-col justify-between rounded-3xl border border-slate-200 bg-white p-8 shadow-soft-card transition hover:border-slate-300 hover:shadow-md"
               >
-                {/* Content */}
-                <div
-                  className={`lg:col-span-6 ${
-                    isReversed ? "lg:order-2" : "lg:order-1"
-                  }`}
-                >
-                  <Badge variant="teal" size="sm" className="mb-3">
-                    {feature.badge}
-                  </Badge>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                    {feature.title}
-                  </h2>
-                  <p className="mt-4 text-base text-slate-600 leading-relaxed">
-                    {feature.description}
-                  </p>
-
-                  <div className="mt-6 rounded-2xl bg-slate-50 border border-slate-200/80 p-5">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      Why it matters
-                    </span>
-                    <p className="mt-1 text-sm font-medium text-slate-800">
-                      Eliminates the gap between making a phone call and keeping the deal alive in your sales pipeline.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Real UI Crop Visual */}
-                <div
-                  className={`lg:col-span-6 flex justify-center ${
-                    isReversed ? "lg:order-1" : "lg:order-2"
-                  }`}
-                >
-                  <div className="relative aspect-[9/16] w-full max-w-[320px] sm:max-w-[340px] overflow-hidden rounded-[36px] bg-slate-950 p-2 shadow-device ring-1 ring-slate-800">
-                    <div className="relative h-full w-full overflow-hidden rounded-[28px]">
-                      <Image
-                        src={feature.screenshot}
-                        alt={feature.title}
-                        fill
-                        sizes="(max-width: 640px) 300px, 340px"
-                        className="object-cover object-top"
-                      />
+                <div>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="teal" size="sm">
+                      {feat.badge}
+                    </Badge>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+                      <Icon className="h-5 w-5" />
                     </div>
                   </div>
+
+                  <h2 className="mt-5 text-xl font-bold text-slate-900 tracking-tight">
+                    {feat.title}
+                  </h2>
+                  <p className="mt-3 text-sm text-slate-600 leading-relaxed">
+                    {feat.description}
+                  </p>
+                </div>
+
+                <div className="mt-6 rounded-2xl bg-slate-50 border border-slate-100 p-4">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600">
+                    Why it matters
+                  </span>
+                  <p className="mt-1 text-xs font-semibold text-slate-800 leading-relaxed">
+                    {feat.benefit}
+                  </p>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Feature Comparison Table */}
-        <div className="mt-28 rounded-3xl border border-slate-200 bg-white p-6 sm:p-10 shadow-soft-card">
+        {/* Comparison Table */}
+        <div className="mt-24 rounded-3xl border border-slate-200 bg-white p-6 sm:p-10 shadow-soft-card max-w-5xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#0E7C7A]">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
               Clear Differentiation
             </span>
-            <h2 className="mt-2 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-              Traditional Phone Sales vs. Call Leads
+            <h2 className="mt-3 text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+              Manual Calling vs. GetCallLead
             </h2>
           </div>
 
@@ -148,8 +173,8 @@ export default function FeaturesPage() {
               <thead>
                 <tr className="border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-500">
                   <th className="py-4 px-4">Sales Capability</th>
-                  <th className="py-4 px-4 text-rose-600">Manual / Personal Dialler</th>
-                  <th className="py-4 px-4 text-[#0E7C7A]">Call Leads Mobile CRM</th>
+                  <th className="py-4 px-4 text-rose-600">Manual Dialling</th>
+                  <th className="py-4 px-4 text-emerald-800">GetCallLead Workspace</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm">
@@ -165,9 +190,9 @@ export default function FeaturesPage() {
                       </div>
                     </td>
                     <td className="py-4 px-4 text-slate-800">
-                      <div className="flex items-start gap-2 text-[#0E7C7A] font-medium">
+                      <div className="flex items-start gap-2 text-emerald-800 font-medium">
                         <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-                        <span>{row.callLeads}</span>
+                        <span>{row.getCallLead}</span>
                       </div>
                     </td>
                   </tr>
@@ -177,21 +202,31 @@ export default function FeaturesPage() {
           </div>
         </div>
 
-        {/* Conversion Banner */}
+        {/* CTA Box */}
         <div className="mt-20 rounded-3xl bg-slate-900 text-white p-8 sm:p-12 text-center max-w-4xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold">
-            Ready to upgrade your team’s call workflow?
+            Upgrade your team’s calling workflow
           </h2>
-          <p className="mt-3 text-slate-300 max-w-xl mx-auto text-sm sm:text-base">
-            See how Call Leads gives phone-driven sales teams a clear next action after every conversation.
+          <p className="mt-3 text-slate-300 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+            See how GetCallLead gives phone-driven sales teams a clear next action after every conversation.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Button href="/download" variant="primary" size="lg">
-              <span>Get Call Leads</span>
-              <ArrowRight className="h-4 w-4 ml-1" />
+            <Button
+              href="/book-demo"
+              variant="primary"
+              size="lg"
+              className="bg-emerald-600 hover:bg-emerald-500 text-white"
+            >
+              <span>Request a Demo</span>
+              <ArrowRight className="h-4 w-4 ml-1.5" />
             </Button>
-            <Button href="/book-demo" variant="secondary" size="lg" className="bg-white text-slate-900">
-              Book a Demo
+            <Button
+              href="/pricing"
+              variant="secondary"
+              size="lg"
+              className="bg-slate-800 text-white border-slate-700 hover:bg-slate-700"
+            >
+              View Pricing
             </Button>
           </div>
         </div>

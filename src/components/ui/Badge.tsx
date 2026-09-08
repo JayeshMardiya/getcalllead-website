@@ -14,7 +14,7 @@ export function Badge({
   ...props
 }: BadgeProps) {
   const variantStyles = {
-    teal: "bg-[#E6F3F2] text-[#0E7C7A] border-[#CDE5E3]",
+    teal: "bg-[#E6F3F2] text-[#085453] border-[#CDE5E3]",
     blue: "bg-[#E3EDFF] text-[#2563EB] border-[#BFDBFE]",
     neutral: "bg-slate-100 text-slate-700 border-slate-200",
     success: "bg-[#DCF7E6] text-[#16A34A] border-[#BBF7D0]",

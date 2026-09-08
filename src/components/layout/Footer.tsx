@@ -14,7 +14,7 @@ export function Footer() {
           <div className="lg:col-span-2 flex flex-col justify-between space-y-4">
             <div>
               <Link href="/" className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0E7C7A] text-white">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-white">
                   <PhoneCall className="h-5 w-5" />
                 </div>
                 <span className="text-lg font-bold tracking-tight text-slate-900">
@@ -32,10 +32,10 @@ export function Footer() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
                 </span>
-                <span>Customer support available</span>
+                <span>Inquiries &amp; support active</span>
               </div>
               <p className="mt-2 text-xs text-slate-500">
-                Domain: <code className="font-mono text-slate-700">getcalllead.io</code>
+                Operated by {SITE_CONFIG.company.legalName} • Domain: <code className="font-mono text-slate-700">getcalllead.io</code>
               </p>
             </div>
           </div>
@@ -47,28 +47,28 @@ export function Footer() {
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
-                <Link href="/features" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
-                  Features & Workflow
+                <Link href="/features" className="text-slate-600 hover:text-emerald-700 transition-colors">
+                  Features &amp; Workflow
                 </Link>
               </li>
               <li>
-                <Link href="/#how-it-works" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
+                <Link href="/#how-it-works" className="text-slate-600 hover:text-emerald-700 transition-colors">
                   How It Works
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
+                <Link href="/pricing" className="text-slate-600 hover:text-emerald-700 transition-colors">
                   Plans &amp; Pricing
                 </Link>
               </li>
               <li>
-                <Link href="/download" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
-                  Download Mobile App
+                <Link href="/book-demo" className="text-slate-600 hover:text-emerald-700 transition-colors">
+                  Request a Demo
                 </Link>
               </li>
               <li>
-                <Link href="/book-demo" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
-                  Book a Product Demo
+                <Link href="/security" className="text-slate-600 hover:text-emerald-700 transition-colors">
+                  Security Architecture
                 </Link>
               </li>
             </ul>
@@ -77,28 +77,28 @@ export function Footer() {
           {/* Support & Resources */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-900">
-              Support & Help
+              Support &amp; Help
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
-                <Link href="/support" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
+                <Link href="/support" className="text-slate-600 hover:text-emerald-700 transition-colors">
                   Support Center
                 </Link>
               </li>
               <li>
-                <Link href="/support#faq" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
+                <Link href="/#faq" className="text-slate-600 hover:text-emerald-700 transition-colors">
                   Common Questions
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
+                <Link href="/contact" className="text-slate-600 hover:text-emerald-700 transition-colors">
                   Contact Inquiries
                 </Link>
               </li>
               <li>
                 <a
                   href={`mailto:${SITE_CONFIG.supportEmail}`}
-                  className="inline-flex items-center gap-1 text-slate-600 hover:text-[#0E7C7A] transition-colors"
+                  className="inline-flex items-center gap-1 text-slate-600 hover:text-emerald-700 transition-colors"
                 >
                   <Mail className="h-3.5 w-3.5" />
                   <span>{SITE_CONFIG.supportEmail}</span>
@@ -110,17 +110,22 @@ export function Footer() {
           {/* Compliance & Store Policies */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-900">
-              Compliance & Legal
+              Compliance &amp; Legal
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li>
-                <Link href="/privacy" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
+                <Link href="/privacy" className="text-slate-600 hover:text-emerald-700 transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-slate-600 hover:text-[#0E7C7A] transition-colors">
+                <Link href="/terms" className="text-slate-600 hover:text-emerald-700 transition-colors">
                   Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/security" className="text-slate-600 hover:text-emerald-700 transition-colors">
+                  Security Overview
                 </Link>
               </li>
               <li>
@@ -139,15 +144,15 @@ export function Footer() {
         {/* Bottom Attribution */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>
-            © {currentYear} {SITE_CONFIG.company.legalName}. All rights reserved.
+            GetCallLead is operated by Invention Hill. © {currentYear} Invention Hill. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <span className="inline-flex items-center gap-1 text-slate-500">
-              <ShieldCheck className="h-4 w-4 text-[#0E7C7A]" />
-              <span>Multi-Tenant Data Isolation</span>
+              <ShieldCheck className="h-4 w-4 text-emerald-600" />
+              <span>Organization-Scoped Workspace Security</span>
             </span>
             <span className="text-slate-300">•</span>
-            <span>Store links shown only after verification</span>
+            <span>Mobile store listings in review</span>
           </div>
         </div>
       </div>

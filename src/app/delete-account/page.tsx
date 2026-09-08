@@ -96,12 +96,12 @@ export default function DeleteAccountPage() {
         <div className="flex items-center justify-center gap-4 mb-10 text-xs font-semibold">
           <div
             className={`flex items-center gap-2 ${
-              step >= 1 ? "text-[#0E7C7A]" : "text-slate-400"
+              step >= 1 ? "text-[#0E7C7A]" : "text-slate-600"
             }`}
           >
             <span
               className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                step >= 1 ? "bg-[#0E7C7A] text-white" : "bg-slate-200 text-slate-600"
+                step >= 1 ? "bg-[#0E7C7A] text-white" : "bg-slate-200 text-slate-700"
               }`}
             >
               1
@@ -111,12 +111,12 @@ export default function DeleteAccountPage() {
           <div className="h-0.5 w-8 bg-slate-200" />
           <div
             className={`flex items-center gap-2 ${
-              step >= 2 ? "text-[#0E7C7A]" : "text-slate-400"
+              step >= 2 ? "text-[#0E7C7A]" : "text-slate-600"
             }`}
           >
             <span
               className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                step >= 2 ? "bg-[#0E7C7A] text-white" : "bg-slate-200 text-slate-600"
+                step >= 2 ? "bg-[#0E7C7A] text-white" : "bg-slate-200 text-slate-700"
               }`}
             >
               2
@@ -126,7 +126,7 @@ export default function DeleteAccountPage() {
           <div className="h-0.5 w-8 bg-slate-200" />
           <div
             className={`flex items-center gap-2 ${
-              step === 3 ? "text-emerald-600" : "text-slate-400"
+              step === 3 ? "text-emerald-600" : "text-slate-600"
             }`}
           >
             <span
@@ -149,7 +149,7 @@ export default function DeleteAccountPage() {
             <div>
               <h2 className="text-xl font-bold text-slate-900">Step 1: Enter Account Details</h2>
               <p className="mt-1 text-xs text-slate-500">
-                Enter the email or phone number used to register your Call Leads account.
+                Enter the email or phone number used to register your GetCallLead account.
               </p>
             </div>
 
@@ -285,7 +285,7 @@ export default function DeleteAccountPage() {
                     Account deletion is permanent. Once processed, you will lose all access to your assigned leads, calendar follow-ups, and organization workspace.
                   </p>
                   <p className="mt-2 leading-relaxed">
-                    Deleting your Call Leads account does not automatically cancel a subscription billed by Apple or Google. Cancel it separately in your App Store or Google Play subscription settings to prevent future renewal charges.
+                    Deleting your GetCallLead account does not automatically cancel a subscription billed by Apple or Google. Cancel it separately in your App Store or Google Play subscription settings to prevent future renewal charges.
                   </p>
                 </div>
               </div>
