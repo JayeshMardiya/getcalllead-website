@@ -14,14 +14,14 @@ export function createServiceHmacHeaders(
   canonicalPath: string,
   bodyString: string,
   visitorIpHmac: string = createHash("sha256").update("127.0.0.1").digest("hex"),
-  keyId = "website-v1",
+  keyId = process.env.WEBSITE_KEY_ID || "website-v1",
 ): HmacHeaders {
   const isProd = process.env.NODE_ENV === "production" || (process.env.NODE_ENV as string) === "staging" || process.env.APP_ENV === "staging";
   const secret = process.env.WEBSITE_HMAC_SECRET || (!isProd ? process.env.JWT_SECRET || "getcalllead-local-development-secret" : "");
 
-  if (!secret || secret.trim().length < 16) {
+  if (!secret || secret.trim().length < 32) {
     if (isProd) {
-      throw new Error("WEBSITE_HMAC_SECRET is required and must be at least 16 characters in production/staging.");
+      throw new Error("WEBSITE_HMAC_SECRET is required and must be at least 32 characters in production/staging.");
     }
     throw new Error("WEBSITE_HMAC_SECRET is not configured.");
   }

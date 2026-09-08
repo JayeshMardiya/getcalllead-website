@@ -47,6 +47,14 @@ function checkRateLimit(visitorIpHmac: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
+    const contentType = request.headers.get("content-type")?.toLowerCase() || "";
+    if (!contentType.startsWith("application/json")) {
+      return NextResponse.json(
+        { error: "Content-Type must be application/json." },
+        { status: 415 },
+      );
+    }
+
     const contentLength = Number(request.headers.get("content-length") || 0);
     if (contentLength > MAX_BODY_BYTES) {
       return NextResponse.json(
@@ -66,6 +74,12 @@ export async function POST(request: NextRequest) {
     }
 
     const rawBody = await request.text();
+    if (Buffer.byteLength(rawBody, "utf8") > MAX_BODY_BYTES) {
+      return NextResponse.json(
+        { error: "Payload exceeds allowed size limit (16KB)." },
+        { status: 413 },
+      );
+    }
     let body: PublicContactSubmission;
     try {
       body = JSON.parse(rawBody);
@@ -81,39 +95,65 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    if (!body.fullName || body.fullName.trim().length < 2) {
+    const fullName = body.fullName?.trim() || "";
+    if (fullName.length < 2 || fullName.length > 120) {
       return NextResponse.json({ error: "Full name is required (at least 2 characters)." }, { status: 400 });
     }
-    if (!body.phoneNumber || body.phoneNumber.trim().length < 7) {
+    const companyName = body.companyName?.trim() || "General Contact";
+    if (companyName.length > 150) {
+      return NextResponse.json({ error: "Company name must be 150 characters or fewer." }, { status: 400 });
+    }
+    const phoneNumber = body.phoneNumber?.trim().replace(/[^\d+]/g, "") || "";
+    if (phoneNumber.length < 7 || phoneNumber.length > 20) {
       return NextResponse.json({ error: "A valid phone number is required." }, { status: 400 });
     }
-    if (!body.message || body.message.trim().length < 5) {
+    const message = body.message?.trim() || "";
+    if (message.length < 5 || message.length > 1000) {
       return NextResponse.json({ error: "Please enter your message or question (at least 5 characters)." }, { status: 400 });
     }
     if (!body.consentAccepted) {
       return NextResponse.json({ error: "Consent to data processing is required." }, { status: 400 });
     }
 
-    const backendUrl = (process.env.BACKEND_API_URL || "http://127.0.0.1:8005").replace(/\/$/, "");
-    const idempotencyKey = body.idempotencyKey || randomUUID();
+    let workEmail: string | undefined;
+    if (body.workEmail?.trim()) {
+      const candidate = body.workEmail.trim().toLowerCase();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate) || candidate.length > 191) {
+        return NextResponse.json({ error: "Please provide a valid email address or leave it blank." }, { status: 400 });
+      }
+      workEmail = candidate;
+    }
+
+    const isProdLike = process.env.NODE_ENV === "production" || process.env.APP_ENV === "staging";
+    const backendUrl = (
+      process.env.BACKEND_API_URL || (!isProdLike ? "http://127.0.0.1:8005" : "")
+    ).replace(/\/$/, "");
+    if (!backendUrl) {
+      return NextResponse.json(
+        { error: "Inquiry service is temporarily unavailable. Please email support@getcalllead.io." },
+        { status: 503 },
+      );
+    }
+    const idempotencyKey = body.idempotencyKey?.trim() || randomUUID();
 
     const normalizedBackendPayload = {
       inquiryType: "CONTACT_REQUEST",
-      fullName: body.fullName.trim(),
-      companyName: body.companyName?.trim() || "General Contact",
-      phoneNumber: body.phoneNumber.trim(),
-      workEmail: body.workEmail?.trim() || undefined,
+      fullName,
+      companyName,
+      phoneNumber,
+      workEmail,
       teamSizeRange: "1-5",
-      callingFlow: body.subject?.trim() || "General Inquiry",
-      message: body.message.trim(),
-      sourcePage: body.sourcePage || "/contact",
+      callingFlow: body.subject?.trim().slice(0, 100) || "General Inquiry",
+      message,
+      sourcePage: body.sourcePage?.slice(0, 200) || "/contact",
       utmSource: body.utmSource?.trim() || undefined,
       utmMedium: body.utmMedium?.trim() || undefined,
       utmCampaign: body.utmCampaign?.trim() || undefined,
       utmContent: body.utmContent?.trim() || undefined,
       utmTerm: body.utmTerm?.trim() || undefined,
       consentAccepted: true,
-      consentVersion: body.consentVersion || "v2026-09-07",
+      consentAt: new Date().toISOString(),
+      consentVersion: body.consentVersion?.slice(0, 50) || "v2026-09-07",
       idempotencyKey,
       honeypot: body.honeypot || undefined,
     };
@@ -138,12 +178,12 @@ export async function POST(request: NextRequest) {
       },
     );
 
-    const backendResult = await backendResponse.json();
+    const backendResult = await backendResponse.json().catch(() => ({}));
 
     if (!backendResponse.ok) {
       return NextResponse.json(
-        { error: backendResult.message || "Failed to persist contact inquiry." },
-        { status: backendResponse.status },
+        { error: "Inquiry service is temporarily unavailable. Please email support@getcalllead.io." },
+        { status: 503 },
       );
     }
 
@@ -154,7 +194,7 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 },
     );
-  } catch (err: any) {
+  } catch {
     return NextResponse.json(
       { error: "An unexpected error occurred while processing your contact request." },
       { status: 500 },

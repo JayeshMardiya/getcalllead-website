@@ -48,6 +48,11 @@ export function ContactForm() {
       setLoading(false);
       return;
     }
+    if (formData.message.trim().length < 5) {
+      setError("Please enter your message or question (at least 5 characters).");
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch("/api/contact", {
@@ -224,6 +229,7 @@ export function ContactForm() {
         </label>
         <textarea
           id="contactMessage"
+          required
           rows={3}
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}

@@ -73,7 +73,7 @@ NEXT_PUBLIC_APP_STORE_URL=
 
 The prebuild check rejects empty, placeholder, localhost, TestFlight, wrong-host, malformed, and non-200 listing URLs for enabled platforms.
 
-Set `BACKEND_API_URL` to the production API. Public forms return an error unless the backend confirms durable intake; the website never reports success after a forwarding failure.
+Set `BACKEND_API_URL` to the production API. Public forms return an error unless the backend confirms durable intake; the website never reports success after a forwarding failure. Configure `WEBSITE_KEY_ID` and the same 32-character-or-longer `WEBSITE_HMAC_SECRET` on the website and backend. Configure separate 32-character-or-longer `IP_RATE_LIMIT_SECRET` and `TRUSTED_PROXY_HEADER_SECRET` values on the website. The reverse proxy must overwrite `x-getcalllead-trusted-client-ip` with the connection IP and `x-getcalllead-proxy-auth` with the proxy secret; client-supplied values must be discarded. Production must run on Node.js 22.13 or newer.
 
 ---
 

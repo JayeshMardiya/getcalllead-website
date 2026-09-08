@@ -62,13 +62,21 @@ console.log("  ✓ All 25 seat benchmarks, boundaries, and formatting validated.
 // 2. HMAC Service Signature Generation
 // ----------------------------------------------------
 console.log("\n[2] HMAC Service Signature Verification");
+const previousKeyId = process.env.WEBSITE_KEY_ID;
+const previousHmacSecret = process.env.WEBSITE_HMAC_SECRET;
+process.env.WEBSITE_KEY_ID = "website-rotation-test";
+process.env.WEBSITE_HMAC_SECRET = "website-test-secret-at-least-32-characters";
 const samplePayload = JSON.stringify({ test: "inquiry", timestamp: Date.now() });
 const hmacHeaders = createServiceHmacHeaders("POST", "/api/v1/integrations/website/inquiries", samplePayload);
-assert.ok(hmacHeaders["x-getcalllead-key-id"], "Key ID header present");
+assert.equal(hmacHeaders["x-getcalllead-key-id"], "website-rotation-test", "Configured key ID header present");
 assert.ok(hmacHeaders["x-getcalllead-timestamp"], "Timestamp header present");
 assert.ok(hmacHeaders["x-getcalllead-nonce"], "Nonce header present");
 assert.ok(hmacHeaders["x-getcalllead-signature"], "Signature header present");
 assert.equal(hmacHeaders["x-getcalllead-signature"].length, 64, "Signature is 64-char SHA256 hex");
+if (previousKeyId === undefined) delete process.env.WEBSITE_KEY_ID;
+else process.env.WEBSITE_KEY_ID = previousKeyId;
+if (previousHmacSecret === undefined) delete process.env.WEBSITE_HMAC_SECRET;
+else process.env.WEBSITE_HMAC_SECRET = previousHmacSecret;
 console.log("  ✓ Server-to-server HMAC signing generated valid 64-char hex digest.");
 
 // ----------------------------------------------------

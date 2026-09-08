@@ -136,7 +136,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const backendUrl = process.env.BACKEND_API_URL?.replace(/\/$/, "") || "http://localhost:3000";
+    const isProdLike = process.env.NODE_ENV === "production" || process.env.APP_ENV === "staging";
+    const backendUrl = (
+      process.env.BACKEND_API_URL || (!isProdLike ? "http://127.0.0.1:8005" : "")
+    ).replace(/\/$/, "");
+    if (!backendUrl) {
+      return NextResponse.json(
+        { error: "Inquiry service is temporarily unavailable. Please email support@getcalllead.io." },
+        { status: 503 },
+      );
+    }
     const idempotencyKey = body.idempotencyKey?.trim() || randomUUID();
 
     const canonicalBackendPayload = {

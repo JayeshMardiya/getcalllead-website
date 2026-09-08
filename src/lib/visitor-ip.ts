@@ -1,8 +1,15 @@
-import { createHmac } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { isIP } from "node:net";
 import { NextRequest } from "next/server";
 
 export const TRUSTED_VISITOR_IP_HEADER = "x-getcalllead-trusted-client-ip";
+export const TRUSTED_PROXY_AUTH_HEADER = "x-getcalllead-proxy-auth";
+
+function secretsMatch(actual: string, expected: string): boolean {
+  const actualBuffer = Buffer.from(actual, "utf8");
+  const expectedBuffer = Buffer.from(expected, "utf8");
+  return actualBuffer.length === expectedBuffer.length && timingSafeEqual(actualBuffer, expectedBuffer);
+}
 
 /**
  * Normalizes IPv4, IPv6, and IPv4-mapped IPv6 strings into a canonical representation.
@@ -54,15 +61,21 @@ export function normalizeIp(rawIp: string): string {
 export function resolveVisitorIp(request: NextRequest): string {
   const isProd = process.env.NODE_ENV === "production" || (process.env.NODE_ENV as string) === "staging";
 
-  // In production, only the trusted header written by Apache from %{REMOTE_ADDR}s is accepted
+  // In production, only headers authenticated and overwritten by the reverse proxy are accepted.
   const trustedHeaderIp = request.headers.get(TRUSTED_VISITOR_IP_HEADER);
-  if (trustedHeaderIp) {
+  const proxyAuth = request.headers.get(TRUSTED_PROXY_AUTH_HEADER);
+  const proxySecret = process.env.TRUSTED_PROXY_HEADER_SECRET || "";
+  if (
+    trustedHeaderIp &&
+    proxyAuth &&
+    proxySecret.length >= 32 &&
+    secretsMatch(proxyAuth, proxySecret)
+  ) {
     return normalizeIp(trustedHeaderIp);
   }
 
   if (isProd) {
-    // Missing trusted reverse-proxy header in production -> reject or mark unknown
-    return "unknown";
+    throw new Error("Authenticated trusted-proxy client IP headers are required in production.");
   }
 
   // Local development fallback: allow x-forwarded-for or localhost
@@ -84,9 +97,9 @@ export function computeVisitorIpHmac(normalizedIp: string, customSecret?: string
     process.env.IP_RATE_LIMIT_SECRET ||
     (!isProd ? process.env.WEBSITE_HMAC_SECRET || "dev-visitor-ip-hmac-salt-32chars" : "");
 
-  if (!secret || secret.trim().length < 16) {
+  if (!secret || secret.trim().length < 32) {
     if (isProd) {
-      throw new Error("IP_RATE_LIMIT_SECRET must be configured with at least 16 chars in production/staging.");
+      throw new Error("IP_RATE_LIMIT_SECRET must be configured with at least 32 chars in production/staging.");
     }
     return createHmac("sha256", "dev-visitor-ip-hmac-salt-32chars").update(normalizedIp, "utf8").digest("hex");
   }
