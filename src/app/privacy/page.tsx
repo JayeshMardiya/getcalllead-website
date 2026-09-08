@@ -120,7 +120,75 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-slate-900 mb-3">5. Account and Data Deletion Rights</h2>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">5. Lawful Basis for Processing</h2>
+            <p>
+              We process your personal data under the following lawful bases:
+            </p>
+            <ul className="list-disc pl-5 mt-2 space-y-1.5 text-xs sm:text-sm">
+              <li><strong>Contract Performance:</strong> Processing necessary to provide the GetCallLead CRM service as agreed when you create an account.</li>
+              <li><strong>Legitimate Interest:</strong> Service analytics, infrastructure security, and fraud prevention (we do not use personal data for behavioural advertising).</li>
+              <li><strong>Consent:</strong> Where required by law, such as push notification opt-in or optional contact book access.</li>
+              <li><strong>Legal Obligation:</strong> Retaining financial transaction records where mandated by applicable tax or accounting regulations.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">6. Your Rights Under Applicable Data Protection Laws</h2>
+            <p>
+              Depending on your jurisdiction, you may have the following rights regarding your personal data:
+            </p>
+
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full text-left text-xs sm:text-sm border border-slate-200 rounded-xl">
+                <thead className="bg-slate-50 border-b border-slate-200 font-semibold text-slate-900">
+                  <tr>
+                    <th className="p-3">Right</th>
+                    <th className="p-3">DPDPA (India)</th>
+                    <th className="p-3">GDPR (EU/EEA)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr>
+                    <td className="p-3 font-medium">Access your data</td>
+                    <td className="p-3">Section 11 — Right to information about processing</td>
+                    <td className="p-3">Article 15 — Right of access</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">Correct inaccurate data</td>
+                    <td className="p-3">Section 12 — Right to correction and erasure</td>
+                    <td className="p-3">Article 16 — Right to rectification</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">Erase / delete data</td>
+                    <td className="p-3">Section 12 — Right to erasure</td>
+                    <td className="p-3">Article 17 — Right to erasure</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">Data portability</td>
+                    <td className="p-3">—</td>
+                    <td className="p-3">Article 20 — Right to data portability</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">Withdraw consent</td>
+                    <td className="p-3">Section 6(6) — Right to withdraw consent</td>
+                    <td className="p-3">Article 7(3) — Right to withdraw consent</td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-medium">Grievance redressal</td>
+                    <td className="p-3">Section 13 — Right to grievance redressal via Data Protection Board</td>
+                    <td className="p-3">Article 77 — Right to lodge complaint with supervisory authority</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p className="mt-4">
+              To exercise any of these rights, contact us at <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-emerald-700 underline">{SITE_CONFIG.supportEmail}</a> or use our <Link href="/delete-account" className="text-emerald-700 underline font-medium">Account &amp; Data Deletion Portal</Link>. We will respond within 30 days.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">7. Account and Data Deletion Rights</h2>
             <p>
               GetCallLead provides a web portal for submitting account and data deletion requests. Identity verification must be completed before records are permanently removed.
             </p>
@@ -136,7 +204,21 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-slate-900 mb-3">6. Contact Our Support Team</h2>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">8. International Data Transfers</h2>
+            <p>
+              GetCallLead uses cloud infrastructure that may process data outside your country of residence. Where personal data is transferred internationally, we ensure appropriate safeguards are in place, including Standard Contractual Clauses (SCCs) where required under GDPR, and compliance with applicable cross-border data transfer provisions under DPDPA.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">9. Changes to This Policy</h2>
+            <p>
+              We may update this Privacy Policy from time to time. If we make material changes, we will notify you through the application or by email at least 30 days before the changes take effect. Continued use of the service after the effective date constitutes acceptance of the updated policy.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">10. Contact Our Support Team</h2>
             <p>
               For privacy questions or data subject inquiries, contact our team at:
             </p>

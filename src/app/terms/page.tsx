@@ -88,7 +88,51 @@ export default function TermsOfServicePage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-slate-900 mb-3">7. Contact Information</h2>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">7. Intellectual Property</h2>
+            <p>
+              All content, trademarks, logos, software code, user interface designs, and documentation comprising the GetCallLead service are owned by {SITE_CONFIG.company.legalName} and are protected under applicable intellectual property laws. You may not copy, modify, distribute, reverse-engineer, or create derivative works from the service without prior written permission.
+            </p>
+            <p className="mt-2">
+              You retain ownership of all customer data you input into the service. By using GetCallLead, you grant us a limited, non-exclusive licence to process your data solely for the purpose of providing the service.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">8. Limitation of Liability</h2>
+            <p>
+              To the maximum extent permitted by applicable law, {SITE_CONFIG.company.legalName} shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, business opportunities, or goodwill, arising from or related to your use of the service.
+            </p>
+            <p className="mt-2">
+              Our total aggregate liability for all claims related to the service shall not exceed the amount you paid to us in the 12 months preceding the event giving rise to the claim, or ₹5,000 (INR), whichever is greater.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">9. Indemnification</h2>
+            <p>
+              You agree to indemnify, defend, and hold harmless {SITE_CONFIG.company.legalName}, its officers, directors, employees, and agents from any claims, damages, losses, liabilities, costs, or expenses (including reasonable legal fees) arising from your use of the service, violation of these Terms, or infringement of any third-party rights.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">10. Governing Law &amp; Dispute Resolution</h2>
+            <p>
+              These Terms are governed by the laws of India. Any disputes arising under or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts in Ahmedabad, Gujarat, India.
+            </p>
+            <p className="mt-2">
+              Before initiating formal proceedings, both parties agree to attempt resolution through good-faith negotiation for a period of 30 days from written notice of the dispute.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">11. Changes to These Terms</h2>
+            <p>
+              We reserve the right to modify these Terms of Service at any time. If we make material changes, we will notify you via email or through in-app notification at least 30 days before the changes take effect. Your continued use of the service after the effective date constitutes acceptance of the updated Terms.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-slate-900 mb-3">12. Contact Information</h2>
             <p>
               If you have any questions regarding these Terms, contact our legal team at{" "}
               <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-emerald-700 underline">
