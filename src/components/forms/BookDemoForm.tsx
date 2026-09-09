@@ -263,7 +263,7 @@ export function BookDemoForm() {
             required
             value={formData.phoneNumber}
             onChange={handleChange}
-            placeholder="e.g. +91 98765 43210"
+            placeholder="e.g. +1 415 555 0123"
             className="w-full min-h-[44px] rounded-xl border border-slate-300 px-3.5 text-sm text-slate-900 outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20"
           />
         </div>

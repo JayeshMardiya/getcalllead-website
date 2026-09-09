@@ -172,7 +172,7 @@ export default function DeleteAccountPage() {
                 required
                 value={identity}
                 onChange={(e) => setIdentity(e.target.value)}
-                placeholder="name@company.com or +91 98765 43210"
+                placeholder="name@company.com or +1 415 555 0123"
                 className="w-full min-h-[44px] rounded-xl border border-slate-300 px-3.5 text-sm text-slate-900 outline-none focus:border-[#0E7C7A] focus:ring-2 focus:ring-[#0E7C7A]/20 bg-white"
               />
             </div>
