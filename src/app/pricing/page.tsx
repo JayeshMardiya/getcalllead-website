@@ -29,7 +29,7 @@ export default function PricingPage() {
     },
     {
       q: "Can I upgrade or change seats later?",
-      a: "Yes. Capacity can be adjusted through the mobile store subscription settings. Contact our team at support@getcalllead.io if you have questions regarding team capacity planning.",
+      a: "Yes. Capacity can be adjusted through the mobile store subscription settings. Contact our team at sales@inventionhill.com if you have questions regarding team capacity planning.",
     },
   ];
 

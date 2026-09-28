@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
     ).replace(/\/$/, "");
     if (!backendUrl) {
       return NextResponse.json(
-        { error: "Inquiry service is temporarily unavailable. Please email support@getcalllead.io." },
+        { error: "Inquiry service is temporarily unavailable. Please email sales@inventionhill.com." },
         { status: 503 },
       );
     }
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
 
     if (!backendResponse.ok) {
       return NextResponse.json(
-        { error: "Inquiry service is temporarily unavailable. Please email support@getcalllead.io." },
+        { error: "Inquiry service is temporarily unavailable. Please email sales@inventionhill.com." },
         { status: 503 },
       );
     }

@@ -101,13 +101,13 @@ export const SITE_CONFIG = {
     "Mobile sales CRM built around phone-first workflows. Assign incoming call leads, schedule follow-ups, and keep reps accountable.",
   domain: "https://getcalllead.io",
   category: "Mobile sales CRM",
-  supportEmail: "support@getcalllead.io",
+  supportEmail: "sales@inventionhill.com",
   company: {
     legalName: "Invention Hill",
     operatorText: "GetCallLead is operated by Invention Hill",
-    contactEmail: "support@getcalllead.io",
-    salesEmail: "support@getcalllead.io",
-    securityEmail: "support@getcalllead.io",
+    contactEmail: "sales@inventionhill.com",
+    salesEmail: "sales@inventionhill.com",
+    securityEmail: "sales@inventionhill.com",
   },
   productStatus: "pre-release-evaluation",
   stores,
@@ -358,7 +358,7 @@ export const SITE_CONFIG = {
     {
       question: "How can I contact the GetCallLead team?",
       answer:
-        "You can reach us by submitting a demo request at /book-demo or emailing support@getcalllead.io.",
+        "You can reach us by submitting a demo request at /book-demo or emailing sales@inventionhill.com.",
     },
   ] as FaqItem[],
 };

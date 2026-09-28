@@ -81,7 +81,7 @@ export function ContactForm() {
       setError(
         submissionError instanceof Error
           ? submissionError.message
-          : "Unable to send your inquiry. Please email support@getcalllead.io.",
+          : "Unable to send your inquiry. Please email sales@inventionhill.com.",
       );
     } finally {
       setLoading(false);

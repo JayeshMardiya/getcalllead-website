@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     if (checkRateLimit(visitorIpHmac)) {
       return NextResponse.json(
-        { error: "Too many requests from this network. Please try again shortly or contact support@getcalllead.io." },
+        { error: "Too many requests from this network. Please try again shortly or contact sales@inventionhill.com." },
         { status: 429 },
       );
     }
@@ -142,7 +142,7 @@ export async function POST(request: NextRequest) {
     ).replace(/\/$/, "");
     if (!backendUrl) {
       return NextResponse.json(
-        { error: "Inquiry service is temporarily unavailable. Please email support@getcalllead.io." },
+        { error: "Inquiry service is temporarily unavailable. Please email sales@inventionhill.com." },
         { status: 503 },
       );
     }
@@ -193,7 +193,7 @@ export async function POST(request: NextRequest) {
       console.error(`[BACKEND INGESTION ERROR] HTTP ${backendResponse.status}: ${errText}`);
       return NextResponse.json(
         {
-          error: "Inquiry service is temporarily unavailable. Please email us directly at support@getcalllead.io.",
+          error: "Inquiry service is temporarily unavailable. Please email us directly at sales@inventionhill.com.",
         },
         { status: 503 },
       );
@@ -215,7 +215,7 @@ export async function POST(request: NextRequest) {
     console.error("[INQUIRY ROUTE ERROR]", error instanceof Error ? error.message : "unknown error");
     return NextResponse.json(
       {
-        error: "Unable to submit your request at this time. Please contact support@getcalllead.io.",
+        error: "Unable to submit your request at this time. Please contact sales@inventionhill.com.",
       },
       { status: 503 },
     );

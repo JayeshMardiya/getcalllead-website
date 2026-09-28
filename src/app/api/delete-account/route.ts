@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const backendUrl = process.env.BACKEND_API_URL?.replace(/\/$/, "");
     if (!backendUrl) {
       return NextResponse.json(
-        { error: "Deletion requests are temporarily unavailable. Please email support@getcalllead.io." },
+        { error: "Deletion requests are temporarily unavailable. Please email sales@inventionhill.com." },
         { status: 503 },
       );
     }
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("[DELETION REQUEST FAILED]", error instanceof Error ? error.message : "unknown error");
     return NextResponse.json(
-      { error: "We could not record the request. Please email support@getcalllead.io." },
+      { error: "We could not record the request. Please email sales@inventionhill.com." },
       { status: 503 },
     );
   }

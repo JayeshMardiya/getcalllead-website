@@ -135,7 +135,7 @@ export function BookDemoForm() {
         setErrorMessage(err.message);
       } else {
         setErrorMessage(
-          "We could not record your request at this time. Please email us at support@getcalllead.io.",
+          "We could not record your request at this time. Please email us at sales@inventionhill.com.",
         );
       }
     }
